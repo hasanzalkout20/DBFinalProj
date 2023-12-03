@@ -1,17 +1,27 @@
 import mysql.connector
 from mysql.connector import Error
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+host = os.environ.get("HOST")
+port = os.environ.get("PORT")
+database = os.environ.get("DATABASE")
+username = os.environ.get("DB_USERNAME")
+password = os.environ.get("DB_PASSWORD")
 
 def create_database():
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            user='cs5330',
-            password='Basketball20$'
+            host=host,
+            user=username,
+            password=password
         )
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("CREATE DATABASE IF NOT EXISTS dbfinal")
-            print("Database 'dbfinal' created successfully")
+            cursor.execute("CREATE DATABASE IF NOT EXISTS {}".format(database))
+            connection.commit()
+            print("Database '{}' created successfully".format(database))
             cursor.close()
     except Error as e:
         print(f"Error creating database: {e}")
@@ -22,10 +32,10 @@ def create_database():
 def create_tables():
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            user='cs5330',
-            password='Basketball20$',
-            database='dbfinal'
+            host=host,
+            user=username,
+            password=password,
+            database=database
         )
         if connection.is_connected():
             cursor = connection.cursor()
@@ -119,6 +129,7 @@ def create_tables():
             ]
             for command in commands:
                 cursor.execute(command)
+            connection.commit()
             print("All tables created successfully")
             cursor.close()
     except Error as e:
