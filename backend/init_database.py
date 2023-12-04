@@ -3,6 +3,7 @@ from mysql.connector import Error
 from dotenv import load_dotenv
 import os
 
+# Load environment variables
 load_dotenv()
 host = os.environ.get("HOST")
 port = os.environ.get("PORT")
@@ -10,6 +11,7 @@ database = os.environ.get("DATABASE")
 username = os.environ.get("DB_USERNAME")
 password = os.environ.get("DB_PASSWORD")
 
+# Function to create the database
 def create_database():
     try:
         connection = mysql.connector.connect(
@@ -19,9 +21,9 @@ def create_database():
         )
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("CREATE DATABASE IF NOT EXISTS {}".format(database))
+            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
             connection.commit()
-            print("Database '{}' created successfully".format(database))
+            print(f"Database '{database}' created successfully")
             cursor.close()
     except Error as e:
         print(f"Error creating database: {e}")
@@ -29,6 +31,7 @@ def create_database():
         if connection.is_connected():
             connection.close()
 
+# Function to create the tables
 def create_tables():
     try:
         connection = mysql.connector.connect(
@@ -42,88 +45,91 @@ def create_tables():
             commands = [
                 """
                 CREATE TABLE IF NOT EXISTS Department (
-                    DeptName VARCHAR(255) NOT NULL,
-                    DeptCode CHAR(4) NOT NULL UNIQUE,
-                    PRIMARY KEY (DeptName)
+                    DeptID INT AUTO_INCREMENT PRIMARY KEY,
+                    DeptName VARCHAR(255) NOT NULL UNIQUE,
+                    DeptCode CHAR(4) NOT NULL UNIQUE
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS Faculty (
-                    FacultyID INT NOT NULL AUTO_INCREMENT,
+                    FacultyID INT AUTO_INCREMENT PRIMARY KEY,
                     Name VARCHAR(255) NOT NULL,
                     Email VARCHAR(255) NOT NULL UNIQUE,
-                    DeptCode CHAR(4) NOT NULL,
-                    `Rank` VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (FacultyID),
-                    FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode)
+                    DeptID INT NOT NULL,
+                    Position VARCHAR(255) NOT NULL,
+                    FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS Program (
-                    ProgramName VARCHAR(255) NOT NULL,
-                    ProgDept CHAR(4) NOT NULL,
-                    `Lead` VARCHAR(255) NOT NULL,
-                    LeadID INT,
-                    LeadEmail VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (ProgramName),
-                    FOREIGN KEY (ProgDept) REFERENCES Department(DeptCode)
+                    ProgID INT AUTO_INCREMENT PRIMARY KEY,
+                    ProgName VARCHAR(255) NOT NULL UNIQUE,
+                    DeptID INT NOT NULL,
+                    FacultyLeadID INT NOT NULL,
+                    FacultyLeadEmail VARCHAR(255) NOT NULL UNIQUE,
+                    FOREIGN KEY (DeptID) REFERENCES Department(DeptID),
+                    FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS Course (
-                    CourseID VARCHAR(255) NOT NULL,
+                    CourseID INT AUTO_INCREMENT PRIMARY KEY,
+                    DeptID INT NOT NULL,
                     Title VARCHAR(255) NOT NULL,
                     Description TEXT NOT NULL,
-                    PRIMARY KEY (CourseID)
+                    FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS Section (
-                    SecID INT NOT NULL AUTO_INCREMENT,
-                    CourseID VARCHAR(255) NOT NULL,
+                    SecID INT AUTO_INCREMENT PRIMARY KEY,
+                    CourseID INT NOT NULL,
                     Semester VARCHAR(255) NOT NULL,
                     Year INT NOT NULL,
-                    FacultyHeadID INT NOT NULL,
+                    FacultyLeadID INT NOT NULL,
                     EnrollCount INT NOT NULL,
-                    PRIMARY KEY (SecID),
                     FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-                    FOREIGN KEY (FacultyHeadID) REFERENCES Faculty(FacultyID)
+                    FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS Objectives (
-                    ObjCode VARCHAR(255) NOT NULL,
+                    ObjID INT AUTO_INCREMENT PRIMARY KEY,
+                    ObjCode VARCHAR(255) NOT NULL UNIQUE,
                     Description TEXT NOT NULL,
-                    ProgDept CHAR(4) NOT NULL,
-                    PRIMARY KEY (ObjCode)
+                    DeptID INT NOT NULL,
+                    FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS SubObjectives (
-                    SubObjCode VARCHAR(255) NOT NULL,
-                    ProgDept CHAR(4) NOT NULL,
-                    ParentObjCode VARCHAR(255) NOT NULL,
+                    SubObjID INT AUTO_INCREMENT PRIMARY KEY,
+                    SubObjCode VARCHAR(255) NOT NULL UNIQUE,
                     Description TEXT NOT NULL,
-                    PRIMARY KEY (SubObjCode),
-                    FOREIGN KEY (ParentObjCode) REFERENCES Objectives(ObjCode)
+                    ParentObjID INT NOT NULL,
+                    FOREIGN KEY (ParentObjID) REFERENCES Objectives(ObjID)
                 );
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS CourseObjectives (
-                    Program VARCHAR(255) NOT NULL,
-                    CourseID VARCHAR(255) NOT NULL,
+                    CourseObjID INT AUTO_INCREMENT PRIMARY KEY,
+                    CourseID INT NOT NULL,
+                    ObjID INT NOT NULL,
+                    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
+                    FOREIGN KEY (ObjID) REFERENCES Objectives(ObjID)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS ObjectiveEval (
+                    EvalID INT AUTO_INCREMENT PRIMARY KEY,
+                    CourseObjID INT NOT NULL,
                     SecID INT NOT NULL,
                     Semester VARCHAR(255) NOT NULL,
                     Year INT NOT NULL,
-                    ObjCode VARCHAR(255) NOT NULL,
-                    SubObjCode VARCHAR(255) NOT NULL,
                     EvalMethod VARCHAR(255) NOT NULL,
                     StudentsPassed INT NOT NULL,
-                    FOREIGN KEY (Program) REFERENCES Program(ProgramName),
-                    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-                    FOREIGN KEY (SecID) REFERENCES Section(SecID),
-                    FOREIGN KEY (ObjCode) REFERENCES Objectives(ObjCode),
-                    FOREIGN KEY (SubObjCode) REFERENCES SubObjectives(SubObjCode)
+                    FOREIGN KEY (CourseObjID) REFERENCES CourseObjectives(CourseObjID),
+                    FOREIGN KEY (SecID) REFERENCES Section(SecID)
                 );
                 """
             ]
@@ -138,6 +144,7 @@ def create_tables():
         if connection.is_connected():
             connection.close()
 
+# Main execution
 if __name__ == "__main__":
     create_database()
     create_tables()
