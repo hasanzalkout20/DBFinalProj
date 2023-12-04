@@ -78,7 +78,7 @@ class Model:
         programs = self.cursor.fetchall()
         return programs
 
-# DATA ENTRY METHODS
+    # DATA ENTRY METHODS
 
     # Method to insert a new department
     def insert_department(self, deptName, deptCode):
