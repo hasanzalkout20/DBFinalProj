@@ -8,10 +8,8 @@ export const Home = () => {
     const [ programs, setPrograms ] = useState([]);
 
     const getPrograms = (department) => {
-        getDepartmentPrograms(department).then(x => setPrograms(x));
+        getDepartmentPrograms(department).then(x => console.log(x));
     }
-
-
 
     return <>
         Hello world
@@ -37,3 +35,5 @@ export const Home = () => {
         </ul>
     </>
 }
+
+// make anotehr one of thdse for each page

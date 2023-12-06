@@ -21,7 +21,7 @@ class Model:
         self.cursor = self.connection.cursor()
 
     def getProgramDepartments(self, department):
-        self.cursor.execute("SELECT * FROM Program WHERE ProgDept = %s", (department,))
+        self.cursor.execute("SELECT * FROM Program WHERE DeptID = %s", (department,))
         programs = self.cursor.fetchall()
         return programs
 
