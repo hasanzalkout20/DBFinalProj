@@ -2,27 +2,27 @@ from app import app
 from app.models.model import Model
 from flask import request, jsonify
 
-@app.route("/programs", methods = ["GET"])
+@app.route("/programs", methods=["GET"])
 def getDepartmentPrograms():
     model = Model()
-    department = request.args.get("department")
-    programs = model.getProgramDepartments(department)
+    department_name = request.args.get("department_name")
+    programs = model.getProgramDepartments(department_name)
     return jsonify(programs)
 
-@app.route("/faculty", methods = ["GET"])
+@app.route("/faculty", methods=["GET"])
 def getDepartmentFaculty():
     model = Model()
-    department = request.args.get("department")
-    programs = model.getFacultyDepartments(department)
-    return jsonify(programs)
+    department_name = request.args.get("department_name")
+    faculty = model.getFacultyByDepartmentName(department_name)
+    return jsonify(faculty)
 
-@app.route("/evaluation", methods = ["GET"])
+@app.route("/evaluation", methods=["GET"])
 def getEvaluation():
     model = Model()
+    course_name = request.args.get("course_name")
     semester = request.args.get("semester")
     year = request.args.get("year")
-    secID = request.args.get("secID")
-    results = model.getEvaluationResults(semester, year, secID)
+    results = model.getEvaluationResultsByCourseName(course_name, semester, year)
     return jsonify(results)
 
 # POST routes for adding data to the database
