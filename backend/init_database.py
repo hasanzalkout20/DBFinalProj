@@ -33,6 +33,37 @@ def create_database():
 
 # Function to create the tables
 def create_tables():
+    # drop tables if they exist
+    try:
+        connection = mysql.connector.connect(
+            host=host,
+            user=username,
+            password=password,
+            database=database
+        )
+        if connection.is_connected():
+            cursor = connection.cursor()
+            commands = [
+                "DROP TABLE IF EXISTS ObjectiveEval;",
+                "DROP TABLE IF EXISTS CourseObjectives;",
+                "DROP TABLE IF EXISTS SubObjectives;",
+                "DROP TABLE IF EXISTS Objectives;",
+                "DROP TABLE IF EXISTS Section;",
+                "DROP TABLE IF EXISTS Course;",
+                "DROP TABLE IF EXISTS Program;",
+                "DROP TABLE IF EXISTS Faculty;",
+                "DROP TABLE IF EXISTS Department;"
+            ]
+            for command in commands:
+                cursor.execute(command)
+            connection.commit()
+            print("All tables dropped successfully")
+            cursor.close()
+    except Error as e:
+        print(f"Error dropping tables: {e}")
+    finally:
+        if connection.is_connected():
+            connection.close()
     try:
         connection = mysql.connector.connect(
             host=host,
