@@ -77,7 +77,7 @@ for eval_result in evaluation_results:
     requests.post(f'{base_url}/evaluationresult', json=eval_result)
 
 # GET Requests for Data Querying
-dept_programs = requests.get(f'{base_url}/programs', params={'department_name': 'Computer Science'}).json()
+dept_programs = requests.get(f'{base_url}/programs', params={'department_name': 'Mathematics'}).json()
 dept_faculty = requests.get(f'{base_url}/faculty', params={'department_name': 'Computer Science'}).json()
 eval_results = requests.get(f'{base_url}/evaluation', params={'course_name': 'Advanced Algorithms', 'semester': 'Fall', 'year': 2022}).json()
 
@@ -107,7 +107,6 @@ print("Evaluation Results for Advanced Algorithms in Fall 2022:", response.json(
 # Test: Listing evaluation results for each objective/sub-objective for an academic year
 response = requests.get(f'{base_url}/evaluation_year', params={'year': 2022})
 print("Evaluation Results for Academic Year 2022:", response.json())
-
 
 # Test: Listing all courses and their objectives for a given program
 # Note: Assuming a route and method for this functionality exists, replace 'program_courses_objectives' with the correct endpoint

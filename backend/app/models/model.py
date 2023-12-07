@@ -102,111 +102,7 @@ class Model:
             WHERE Section.Year = %s
         ''', (academic_year,))
         return self.cursor.fetchall()
-
-    # DATA ENTRY METHODS
-
-    # Method to insert a new department
-    def insert_department(self, deptName, deptCode):
-        try:
-            sql = "INSERT INTO Department (DeptName, DeptCode) VALUES (%s, %s)"
-            self.cursor.execute(sql, (deptName, deptCode))
-            self.connection.commit()
-            return {"message": "Department added successfully"}
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to insert a new faculty member
-    def insert_faculty(self, name, email, deptID, position):
-        try:
-            sql = "INSERT INTO Faculty (Name, Email, DeptID, Position) VALUES (%s, %s, %s, %s)"
-            self.cursor.execute(sql, (name, email, deptID, position))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to insert a new program
-    def insert_program(self, progName, deptID, facultyLeadID, facultyLeadEmail):
-        try:
-            sql = "INSERT INTO Program (ProgName, DeptID, FacultyLeadID, FacultyLeadEmail) VALUES (%s, %s, %s, %s)"
-            self.cursor.execute(sql, (progName, deptID, facultyLeadID, facultyLeadEmail))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
     
-
-    # Method to insert a new course
-    def insert_course(self, deptID, title, description):
-        try:
-            sql = "INSERT INTO Course (DeptID, Title, Description) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (deptID, title, description))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}    
-        
-
-    # Method to insert a new section
-    def insert_section(self, courseID, semester, year, facultyLeadID, enrollCount):
-        try:
-            sql = "INSERT INTO Section (CourseID, Semester, Year, FacultyLeadID, EnrollCount) VALUES (%s, %s, %s, %s, %s)"
-            self.cursor.execute(sql, (courseID, semester, year, facultyLeadID, enrollCount))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to insert a new objective
-    def insert_objective(self, objCode, description, deptID):
-        try:
-            sql = "INSERT INTO Objectives (ObjCode, Description, DeptID) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (objCode, description, deptID))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to insert a new subobjective
-    def insert_subobjective(self, subObjCode, description, parentObjID):
-        try:
-            sql = "INSERT INTO SubObjectives (SubObjCode, Description, ParentObjID) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (subObjCode, description, parentObjID))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to link a course to an objective
-    def link_course_to_objective(self, courseID, objID):
-        try:
-            sql = "INSERT INTO CourseObjectives (CourseID, ObjID) VALUES (%s, %s)"
-            self.cursor.execute(sql, (courseID, objID))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to enter evaluation results for a section
-    def insert_evaluation_result(self, courseObjID, secID, semester, year, evalMethod, studentsPassed):
-        try:
-            sql = "INSERT INTO ObjectiveEval (CourseObjID, SecID, Semester, Year, EvalMethod, StudentsPassed) VALUES (%s, %s, %s, %s, %s, %s)"
-            self.cursor.execute(sql, (courseObjID, secID, semester, year, evalMethod, studentsPassed))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-        
-    # Method to link a course to a program
-    def link_course_to_program(self, programID, courseID):
-        try:
-            sql = "INSERT INTO ProgramCourses (ProgramID, CourseID) VALUES (%s, %s)"
-            self.cursor.execute(sql, (programID, courseID))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
-    # Method to assign an objective to a course-program pair
-    def assign_objective_to_course_program(self, courseID, programID, objID):
-        try:
-            sql = "INSERT INTO CourseProgramObjectives (CourseID, ProgramID, ObjID) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (courseID, programID, objID))
-            self.connection.commit()
-        except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}
-
     def getCoursesAndObjectivesForProgram(self, program_name):
         self.cursor.execute('''
             SELECT Course.Title, Objectives.ObjCode, SubObjectives.SubObjCode 
@@ -217,6 +113,164 @@ class Model:
             WHERE Course.DeptID IN (SELECT DeptID FROM Program WHERE ProgName = %s)
         ''', (program_name,))
         return self.cursor.fetchall()
+
+    # DATA ENTRY METHODS
+
+    # Method to insert a new department
+    def insert_department(self, deptName, deptCode):
+        try:
+            # Check if department already exists
+            self.cursor.execute("SELECT DeptID FROM Department WHERE DeptName = %s OR DeptCode = %s", (deptName, deptCode))
+            if self.cursor.fetchone():
+                return {"message": "Department already exists"}
+            # Insert new department if not exist
+            sql = "INSERT INTO Department (DeptName, DeptCode) VALUES (%s, %s)"
+            self.cursor.execute(sql, (deptName, deptCode))
+            self.connection.commit()
+            return {"message": "Department added successfully"}
+        except Error as e:
+            return {"error": str(e)}
+
+    # Method to insert a new faculty member
+    def insert_faculty(self, name, email, deptID, position):
+        try:
+            #check if faculty member already exists
+            self.cursor.execute("SELECT FacultyID FROM Faculty WHERE Name = %s AND Email = %s", (name, email))
+            if self.cursor.fetchone():
+                return {"message": "Faculty member already exists"}
+            sql = "INSERT INTO Faculty (Name, Email, DeptID, Position) VALUES (%s, %s, %s, %s)"
+            self.cursor.execute(sql, (name, email, deptID, position))
+            self.connection.commit()
+            return {"message": "Faculty member added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to insert a new program
+    def insert_program(self, progName, deptID, facultyLeadID, facultyLeadEmail):
+        try:
+            #check if program already exists
+            self.cursor.execute("SELECT ProgID FROM Program WHERE ProgName = %s", (progName,))
+            if self.cursor.fetchone():
+                return {"message": "Program already exists"}  
+            sql = "INSERT INTO Program (ProgName, DeptID, FacultyLeadID, FacultyLeadEmail) VALUES (%s, %s, %s, %s)"
+            self.cursor.execute(sql, (progName, deptID, facultyLeadID, facultyLeadEmail))
+            self.connection.commit()
+            return {"message": "Program added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+    
+    # Method to insert a new course
+    def insert_course(self, deptID, title, description):
+        try:
+            # check if course already exists
+            self.cursor.execute("SELECT CourseID FROM Course WHERE Title = %s", (title,))
+            if self.cursor.fetchone():
+                return {"message": "Course already exists"}
+            sql = "INSERT INTO Course (DeptID, Title, Description) VALUES (%s, %s, %s)"
+            self.cursor.execute(sql, (deptID, title, description))
+            self.connection.commit()
+            return {"message": "Course added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}    
+        
+
+    # Method to insert a new section
+    def insert_section(self, courseID, semester, year, facultyLeadID, enrollCount):
+        try:
+            #check if section already exists
+            self.cursor.execute("SELECT SecID FROM Section WHERE CourseID = %s AND Semester = %s AND Year = %s", (courseID, semester, year))
+            if self.cursor.fetchone():
+                return {"message": "Section already exists"}
+            sql = "INSERT INTO Section (CourseID, Semester, Year, FacultyLeadID, EnrollCount) VALUES (%s, %s, %s, %s, %s)"
+            self.cursor.execute(sql, (courseID, semester, year, facultyLeadID, enrollCount))
+            self.connection.commit()
+            return {"message": "Section added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to insert a new objective
+    def insert_objective(self, objCode, description, deptID):
+        try:
+            # check if objective already exists
+            self.cursor.execute("SELECT ObjID FROM Objectives WHERE ObjCode = %s", (objCode,))
+            if self.cursor.fetchone():
+                return {"message": "Objective already exists"}
+            sql = "INSERT INTO Objectives (ObjCode, Description, DeptID) VALUES (%s, %s, %s)"
+            self.cursor.execute(sql, (objCode, description, deptID))
+            self.connection.commit()
+            return {"message": "Objective added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to insert a new subobjective
+    def insert_subobjective(self, subObjCode, description, parentObjID):
+        try:
+            # check if subobjective already exists
+            self.cursor.execute("SELECT SubObjID FROM SubObjectives WHERE SubObjCode = %s", (subObjCode,))
+            if self.cursor.fetchone():
+                return {"message": "Subobjective already exists"}
+            sql = "INSERT INTO SubObjectives (SubObjCode, Description, ParentObjID) VALUES (%s, %s, %s)"
+            self.cursor.execute(sql, (subObjCode, description, parentObjID))
+            self.connection.commit()
+            return {"message": "Subobjective added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to link a course to an objective
+    def link_course_to_objective(self, courseID, objID):
+        try:
+            # check if course-objective pair already exists
+            self.cursor.execute("SELECT CourseObjID FROM CourseObjectives WHERE CourseID = %s AND ObjID = %s", (courseID, objID))
+            if self.cursor.fetchone():
+                return {"message": "Course-objective pair already exists"}
+            sql = "INSERT INTO CourseObjectives (CourseID, ObjID) VALUES (%s, %s)"
+            self.cursor.execute(sql, (courseID, objID))
+            self.connection.commit()
+            return {"message": "Course-objective pair added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to enter evaluation results for a section
+    def insert_evaluation_result(self, courseObjID, secID, semester, year, evalMethod, studentsPassed):
+        try:
+            #check if evaluation result already exists
+            self.cursor.execute("SELECT EvalID FROM ObjectiveEval WHERE CourseObjID = %s AND SecID = %s AND Semester = %s AND Year = %s AND EvalMethod = %s", (courseObjID, secID, semester, year, evalMethod))
+            if self.cursor.fetchone():
+                return {"message": "Evaluation result already exists"}
+            sql = "INSERT INTO ObjectiveEval (CourseObjID, SecID, Semester, Year, EvalMethod, StudentsPassed) VALUES (%s, %s, %s, %s, %s, %s)"
+            self.cursor.execute(sql, (courseObjID, secID, semester, year, evalMethod, studentsPassed))
+            self.connection.commit()
+            return {"message": "Evaluation result added successfully"}  
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+        
+    # Method to link a course to a program
+    def link_course_to_program(self, ProgID, courseID):
+        try:
+            # check if course-program pair already exists
+            self.cursor.execute("SELECT ProgramCourseID FROM ProgramCourses WHERE ProgID = %s AND CourseID = %s", (ProgID, courseID))
+            if self.cursor.fetchone():
+                return {"message": "Course-program pair already exists"}
+            sql = "INSERT INTO ProgramCourses (ProgID, CourseID) VALUES (%s, %s)"
+            self.cursor.execute(sql, (ProgID, courseID))
+            self.connection.commit()
+            return {"message": "Course-program pair added successfully"}
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to assign an objective to a course-program pair
+    def assign_objective_to_course_program(self, courseID, ProgID, objID):
+        try:
+            # check if course-program-objective pair already exists
+            self.cursor.execute("SELECT CourseProgObjID FROM CourseProgramObjectives WHERE CourseID = %s AND ProgID = %s AND ObjID = %s", (courseID, ProgID, objID))
+            if self.cursor.fetchone():
+                return {"message": "Course-program-objective pair already exists"}
+            sql = "INSERT INTO CourseProgramObjectives (CourseID, ProgID, ObjID) VALUES (%s, %s, %s)"
+            self.cursor.execute(sql, (courseID, ProgID, objID))
+            self.connection.commit()
+            return {"message": "Course-program-objective pair added successfully"}  
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
 
 
     
