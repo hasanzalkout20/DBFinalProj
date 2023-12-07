@@ -11,6 +11,41 @@ database = os.environ.get("DATABASE")
 username = os.environ.get("DB_USERNAME")
 password = os.environ.get("DB_PASSWORD")
 
+# used for testing (clears tables and data)
+def drop_tables():
+    try:
+        connection = mysql.connector.connect(
+            host=host,
+            user=username,
+            password=password,
+            database=database
+        )
+        if connection.is_connected():
+            cursor = connection.cursor()
+            tables = [
+                "CourseProgramObjectives",
+                "ProgramCourses",
+                "ObjectiveEval",
+                "CourseObjectives",
+                "SubObjectives",
+                "Objectives",
+                "Section",
+                "Course",
+                "Program",
+                "Faculty",
+                "Department"
+            ]
+            for table in tables:
+                cursor.execute(f"DROP TABLE IF EXISTS {table}")
+                print(f"Table '{table}' dropped successfully")
+            connection.commit()
+            cursor.close()
+    except Error as e:
+        print(f"Error dropping tables: {e}")
+    finally:
+        if connection.is_connected():
+            connection.close()
+
 # Function to create the database
 def create_database():
     try:
@@ -131,7 +166,27 @@ def create_tables():
                     FOREIGN KEY (CourseObjID) REFERENCES CourseObjectives(CourseObjID),
                     FOREIGN KEY (SecID) REFERENCES Section(SecID)
                 );
+                """,
                 """
+                CREATE TABLE IF NOT EXISTS ProgramCourses (
+                    ProgramCourseID INT AUTO_INCREMENT PRIMARY KEY,
+                    ProgID INT NOT NULL,
+                    CourseID INT NOT NULL,
+                    FOREIGN KEY (ProgID) REFERENCES Program(ProgID),
+                    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
+                    UNIQUE (ProgID, CourseID)
+                    );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS CourseProgramObjectives (
+                    CourseProgObjID INT AUTO_INCREMENT PRIMARY KEY,
+                    ProgramCourseID INT NOT NULL,
+                    ObjID INT NOT NULL,
+                    FOREIGN KEY (ProgramCourseID) REFERENCES ProgramCourses(ProgramCourseID),
+                    FOREIGN KEY (ObjID) REFERENCES Objectives(ObjID),
+                    UNIQUE (ProgramCourseID, ObjID)
+                );
+                """ 
             ]
             for command in commands:
                 cursor.execute(command)
@@ -146,6 +201,7 @@ def create_tables():
 
 # Main execution
 if __name__ == "__main__":
+    # drop_tables()    # uncomment to clear tables and data
     create_database()
     create_tables()
 

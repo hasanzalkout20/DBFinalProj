@@ -48,6 +48,17 @@ evaluation_results = [
     {"courseObjID": 2, "secID": 2, "semester": "Spring", "year": 2023, "evalMethod": "Project", "studentsPassed": 23}
 ]
 
+# Additional sample data for linking courses to programs and assigning objectives
+program_courses = [
+    {"ProgID": 1, "courseID": 1},
+    {"ProgID": 2, "courseID": 2}
+]
+
+course_program_objectives = [
+    {"courseID": 1, "ProgID": 1, "objID": 1},
+    {"courseID": 2, "ProgID": 2, "objID": 2}
+]
+
 # POST Requests for Data Entry
 for dept in departments:
     requests.post(f'{base_url}/department', json=dept)
@@ -75,6 +86,12 @@ for co in course_objectives:
 
 for eval_result in evaluation_results:
     requests.post(f'{base_url}/evaluationresult', json=eval_result)
+    
+for pc in program_courses:
+    requests.post(f'{base_url}/link_course_program', json=pc)
+
+for cpo in course_program_objectives:
+    requests.post(f'{base_url}/assign_objective', json=cpo)
 
 # GET Requests for Data Querying
 dept_programs = requests.get(f'{base_url}/programs', params={'department_name': 'Mathematics'}).json()
@@ -115,3 +132,6 @@ print("Courses and Objectives for CS Masters Program:", response.json())
 # Test: Listing all objectives for a given program
 response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'CS Masters'})
 print("Objectives for CS Masters Program:", response.json())
+
+
+

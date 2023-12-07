@@ -259,18 +259,28 @@ class Model:
             return {"error": str(e)}
 
     # Method to assign an objective to a course-program pair
-    def assign_objective_to_course_program(self, courseID, ProgID, objID):
+    def assign_objective_to_course_program(self, ProgID, courseID, objID):
         try:
+            # First, find the ProgramCourseID from ProgramCourses table
+            self.cursor.execute("SELECT ProgramCourseID FROM ProgramCourses WHERE ProgID = %s AND CourseID = %s", (ProgID, courseID))
+            program_course_entry = self.cursor.fetchone()
+            if not program_course_entry:
+                return {"message": "No matching program-course pair found"}
+
+            program_course_id = program_course_entry[0]
+
             # check if course-program-objective pair already exists
-            self.cursor.execute("SELECT CourseProgObjID FROM CourseProgramObjectives WHERE CourseID = %s AND ProgID = %s AND ObjID = %s", (courseID, ProgID, objID))
+            self.cursor.execute("SELECT CourseProgObjID FROM CourseProgramObjectives WHERE ProgramCourseID = %s AND ObjID = %s", (program_course_id, objID))
             if self.cursor.fetchone():
                 return {"message": "Course-program-objective pair already exists"}
-            sql = "INSERT INTO CourseProgramObjectives (CourseID, ProgID, ObjID) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (courseID, ProgID, objID))
+
+            sql = "INSERT INTO CourseProgramObjectives (ProgramCourseID, ObjID) VALUES (%s, %s)"
+            self.cursor.execute(sql, (program_course_id, objID))
             self.connection.commit()
             return {"message": "Course-program-objective pair added successfully"}  
         except mysql.connector.errors.IntegrityError as e:
             return {"error": str(e)}
+
 
 
     
