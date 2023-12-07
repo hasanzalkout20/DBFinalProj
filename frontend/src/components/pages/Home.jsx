@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getDepartmentPrograms, getDepartmentFaculty, getEvaluation } from "../../api";
+import { addDepartment, addFaculty, addProgram, addCourse, addSection, addObjective, addSubObjective, linkCourseObjective, getDepartmentPrograms, getDepartmentFaculty, getEvaluation } from "../../api";
 import { TextField } from "../common/TextField";
 import { Department, Faculty, Program, Section, Course, Objective, CourseObjective, SubObjective} from "../../models";
 
@@ -47,6 +47,7 @@ export const Home = () => {
 
     }
 
+    
     // repeat for each table
     function addDepartment(DeptID, DeptName, DeptCode) {
         const program = new Program(DeptID, DeptName, DeptCode);
@@ -58,7 +59,7 @@ export const Home = () => {
 
     }
 
-    function addProgam(ProgID, ProgName, DeptID, FacultyLeadID, FacultyLeadEmail) {
+    function addProgram(ProgID, ProgName, DeptID, FacultyLeadID, FacultyLeadEmail) {
         const program = new Program(ProgID, ProgName, DeptID, FacultyLeadID, FacultyLeadEmail);
 
     }
@@ -115,33 +116,27 @@ export const Home = () => {
 // Given an academicyear(e.g.23-24,whichconstitutesummer23,fall23andspring24)  List all the evaluation results for each objective/sub-objective
 //      For each objective/sub-objective, list the course/section that are involved in evaluating them, and list the result for each course/section.
 //      For each objective/sub-objective, aggregate the result to show the number (and the percentage) of students
+    
+
     return (
-        <>
-        
-            {/* <form name="queries" id="queries">
-                <TextField label="Department:" value={getDepartmentPrograms} setValue={handleDepartmentChange} />
-                <button type="button" onClick={getDepartment}>
-                    Get Department Details
-                </button>
-
-                <TextField label="Program:" value={program} setValue={handleProgramChange} />
-                <button type="button" onClick={getProgramDetails}>
-                    Get Program Details
-                </button>
-
-                <TextField label="Semester:" value={semester} setValue={handleSemesterChange} />
-                <button type="button" onClick={getSemesterDetails}>
-                    Get Semester Details
-                </button>
-
-                <TextField label="Academic Year:" value={academicYear} setValue={handleAcademicYearChange} />
-                <button type="button" onClick={getYearlyDetails}>
-                    Get Yearly Details
-                </button>
-            </form> */}
-
-            {/* Display data based on queries */}
-            {/* Use state variables like programsList, coursesList, objectivesList, and evaluationResults to render information */}
-        </>
-    );
+            <div>
+                <div>
+                    <label htmlFor="department">Department:</label>
+                    <TextField
+                        id="department"
+                        value={department}
+                        onChange={handleDepartmentChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="program">Program:</label>
+                    <TextField
+                        id="program"
+                        value={program}
+                        onChange={handleProgramChange}
+                    />
+                </div>
+                {/* Other input fields for semester, academic year, etc. */}
+            </div>
+        );
 };
