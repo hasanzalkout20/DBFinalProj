@@ -12,10 +12,160 @@ export const Results = () => {
         getDepartmentPrograms(department).then(x => console.log(x));
     }
 
+    // Check form names and id
     return <>
+        
+        <div>
+            <h3> Add:</h3>
+        </div>
+       
+        <form name = "programs" id = "programs">
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Department
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Faculty
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Program
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Course
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Section
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Objective
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Add Sub-Objective
+            </button>
+
+        </form>
 
         <div>
-            <h3>Input Data About Departments:</h3>
+            <h3>Assign:</h3>
+        </div>
+
+        <form name = "programs" id = "programs"> 
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Assign a Learning Objective
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Assign a Course
+            </button>
+
+        </form>
+
+        <div>
+            <h3>Display:</h3>
+        </div>
+
+        <form name = "programs" id = "programs"> 
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Show Programs
+            </button>
+            
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Show Courses
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Show Courses
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Show Evaluation Results from Program
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    getPrograms(department)
+                }}
+            >
+                Show Evaluation Results from Dates
+            </button>
+            
+        </form>
+
+
+
+        <div>
+            <h3>Input Information to Add Department:</h3>
         </div>
         
         <form name = "programs" id = "programs">
@@ -28,7 +178,7 @@ export const Results = () => {
                     getPrograms(department)
                 }}
             >
-                Update Department Information
+                Add Department
             </button>
         </form>
 
@@ -41,7 +191,7 @@ export const Results = () => {
         </ul>
 
         <div>
-            <h3>Input Data About Faculty:</h3>
+            <h3>Input Information to Add Faculty:</h3>
         </div>
        
 
@@ -57,7 +207,7 @@ export const Results = () => {
                     getDepartmentFaculty(Faculty)
                 }}
             >
-                Update Faculty Information
+                Add Faculty
             </button>
         </form>
 
@@ -70,7 +220,7 @@ export const Results = () => {
         </ul>
 
         <div>
-            <h3>Input Data About Programs:</h3>
+            <h3>Input Information to Add Program:</h3>
         </div>
 
         <form name = "programs" id = "programs">
@@ -85,7 +235,7 @@ export const Results = () => {
                     getPrograms(Program)
                 }}
             >
-                Update Program Information
+                Add Program
             </button>
         </form>
 
@@ -99,7 +249,7 @@ export const Results = () => {
 
 
         <div>
-            <h3>Input Data About Courses:</h3>
+            <h3>Input Information to Add Course:</h3>
         </div>
 
         <form name = "course" id = "courses">
@@ -113,7 +263,7 @@ export const Results = () => {
                     getPrograms(Course)
                 }}
             >
-                Update Course Information
+                Add Course
             </button>
         </form>
 
@@ -126,11 +276,29 @@ export const Results = () => {
         </ul>
 
         <div>
-            <h3>Input Data About Sections:</h3>
+            <h3>Input Information to Add Section:</h3>
         </div>
 
+        Section ID: 
+        
+        <select
+            label="Section ID: "
+            value={Section}
+            onChange={(e) => addSection(e.target.value)}
+        >
+            {/* Generating options from 001 to 999 */}
+            {[...Array(999).keys()].map((index) => {
+                const optionValue = `00${index + 1}`.slice(-3); // Pads the number with leading zeros
+                return (
+                    <option key={optionValue} value={optionValue}>
+                        {optionValue}
+                    </option>
+                );
+            })}
+        </select>
+        
         <form name = "sections" id = "sections">
-            <TextField label = "Section ID: " value = { Section } setValue={addSection}/>
+            
             <TextField label = "Course ID: " value = { Section } setValue={addSection}/>
             <TextField label = "Semester: " value = { Section } setValue={addSection}/>
             <TextField label = "Year: " value = { Section } setValue={addSection}/>
@@ -142,7 +310,7 @@ export const Results = () => {
                     getPrograms(Section)
                 }}
             >
-                Update Section Information
+                Add Section
             </button>
         </form>
 
@@ -155,7 +323,7 @@ export const Results = () => {
         </ul>
 
         <div>
-            <h3>Input Data About Learning Objectives:</h3>
+            <h3>Input Information to Add Learning Objective:</h3>
         </div>
     
 
@@ -170,7 +338,7 @@ export const Results = () => {
                     getPrograms(Objective)
                 }}
             >
-                Update Objective Information
+                Add Learning Objective
             </button>
         </form>
 
@@ -183,7 +351,7 @@ export const Results = () => {
         </ul>
 
         <div>
-            <h3>Input Data About Learning Sub-objectives:</h3>
+            <h3>Input Information to Add Learning Sub-objectives:</h3>
         </div>
 
         <form name = "sub-objective" id = "sub-objective">
@@ -197,7 +365,7 @@ export const Results = () => {
                     getPrograms(SubObjective)
                 }}
             >
-                Update Sub-Objective Information
+                Add Sub-Objective
             </button>
         </form>
 
@@ -208,5 +376,26 @@ export const Results = () => {
                 })
             }
         </ul>
+
+
+        Querying: 
+
+        Given a Department
+        List all its programs
+        List all its faculty (including what program each faculty is in charge of, if there is one)
+
+        Given a Program
+        List all courses, together with the objectives/sub-objctives assocaition with year
+        List all the objectives
+
+        Given a semester and a program:
+        List all evaluation results for each section (if data for some sections has not been entered, just indicate that the information is not found)
+        
+        Given an academic year
+        List all evaluation results for each objective/sub-objective
+            For each obj/sub-obj, list the course/section that are in involved with evaluating them and list the resutl for each course/section
+            For each objective/sub-objective, aggregate the result to show that number (and the percentage) of students
     </>
+
+
 }
