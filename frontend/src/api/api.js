@@ -3,6 +3,30 @@ import axios from "axios";
 // define api endpoint in the backend
 const baseEndpoint = "http://localhost:8000";
 
+export const getAllDepartments = () => new Promise((resolve, reject) => {
+    // create apiConfig object with a property
+    const apiConfig = {
+        
+    };
+
+    // log endpoint to the console
+    console.log(`${ baseEndpoint }/programs`);
+
+    // log apiConfig object to the console
+    console.log(apiConfig);
+
+    // use axios to make a get request 
+    axios.get(`${ baseEndpoint }/departments`, apiConfig)
+        // if request is success, resolve Promise iwth data received from request
+        .then(x => resolve(x.data))
+
+        // if there is an error, alerts the error and rejects the Promise with the error object received 
+        .catch(x => {
+            alert(x);
+            reject(x);
+        });
+});
+
 // getDepartmentPrograms()
 // takes a department parameter and returns a Promise
 export const getDepartmentPrograms = (department) => new Promise((resolve, reject) => {
