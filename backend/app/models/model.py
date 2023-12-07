@@ -84,7 +84,18 @@ class Model:
             WHERE Course.Title = %s AND Section.Semester = %s AND Section.Year = %s
         ''', (course_name, semester, year))
         return self.cursor.fetchall()
-
+    
+    def getEvaluationResultsByAcademicYear(self, academic_year):
+        self.cursor.execute('''
+            SELECT ObjectiveEval.*, Objectives.ObjCode, SubObjectives.SubObjCode
+            FROM ObjectiveEval
+            JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+            JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
+            LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
+            JOIN Section ON ObjectiveEval.SecID = Section.SecID
+            WHERE Section.Year = %s
+        ''', (academic_year,))
+        return self.cursor.fetchall()
 
     # DATA ENTRY METHODS
 
@@ -171,6 +182,25 @@ class Model:
             self.connection.commit()
         except mysql.connector.errors.IntegrityError as e:
             return {"error": str(e)}
+        
+    # Method to link a course to a program
+    def link_course_to_program(self, programID, courseID):
+        try:
+            sql = "INSERT INTO ProgramCourses (ProgramID, CourseID) VALUES (%s, %s)"
+            self.cursor.execute(sql, (programID, courseID))
+            self.connection.commit()
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
+    # Method to assign an objective to a course-program pair
+    def assign_objective_to_course_program(self, courseID, programID, objID):
+        try:
+            sql = "INSERT INTO CourseProgramObjectives (CourseID, ProgramID, ObjID) VALUES (%s, %s, %s)"
+            self.cursor.execute(sql, (courseID, programID, objID))
+            self.connection.commit()
+        except mysql.connector.errors.IntegrityError as e:
+            return {"error": str(e)}
+
         
 
     

@@ -112,3 +112,31 @@ def addEvaluationResult():
     studentsPassed = request.json.get("studentsPassed")
     model.insert_evaluation_result(courseObjID, secID, semester, year, evalMethod, studentsPassed)
     return jsonify({"message": "Evaluation result added successfully"}), 201
+
+# Route to link a course to a program
+@app.route("/link_course_program", methods=["POST"])
+def linkCourseToProgram():
+    model = Model()
+    programID = request.json.get("programID")
+    courseID = request.json.get("courseID")
+    response = model.link_course_to_program(programID, courseID)
+    return jsonify(response), 201
+
+# Route to assign an objective to a course-program pair
+@app.route("/assign_objective", methods=["POST"])
+def assignObjectiveToCourseProgram():
+    model = Model()
+    courseID = request.json.get("courseID")
+    programID = request.json.get("programID")
+    objID = request.json.get("objID")
+    response = model.assign_objective_to_course_program(courseID, programID, objID)
+    return jsonify(response), 201
+
+@app.route("/evaluation_year", methods=["GET"])
+def getEvaluationByYear():
+    model = Model()
+    academic_year = request.args.get("year")
+    results = model.getEvaluationResultsByAcademicYear(academic_year)
+    return jsonify(results)
+
+
