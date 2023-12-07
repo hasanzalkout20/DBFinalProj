@@ -52,10 +52,16 @@ class Model:
         programs = self.cursor.fetchall()
         return programs
 
-    def getProgramObjectives(self, program):
-        self.cursor.execute("SELECT * FROM CourseObjectives WHERE Program = %s", (program,))
-        programs = self.cursor.fetchall()
-        return programs
+    def getProgramObjectives(self, program_name):
+        self.cursor.execute('''
+            SELECT Objectives.ObjCode, Objectives.Description
+            FROM Objectives
+            JOIN CourseObjectives ON Objectives.ObjID = CourseObjectives.ObjID
+            JOIN Course ON Course.CourseID = CourseObjectives.CourseID
+            WHERE Course.DeptID = (SELECT DeptID FROM Program WHERE ProgName = %s)
+        ''', (program_name,))
+        return self.cursor.fetchall()
+
 
     def getEvaluationResultsAcademicYear(self, year):
         self.cursor.execute('''
@@ -201,6 +207,16 @@ class Model:
         except mysql.connector.errors.IntegrityError as e:
             return {"error": str(e)}
 
-        
+    def getCoursesAndObjectivesForProgram(self, program_name):
+        self.cursor.execute('''
+            SELECT Course.Title, Objectives.ObjCode, SubObjectives.SubObjCode 
+            FROM Course
+            JOIN CourseObjectives ON Course.CourseID = CourseObjectives.CourseID
+            JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
+            LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
+            WHERE Course.DeptID IN (SELECT DeptID FROM Program WHERE ProgName = %s)
+        ''', (program_name,))
+        return self.cursor.fetchall()
+
 
     

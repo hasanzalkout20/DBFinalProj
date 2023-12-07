@@ -2,7 +2,7 @@ import requests
 
 base_url = 'http://127.0.0.1:8000'  # Adjust as needed
 
-# Sample Data
+# Sample Data for Testing Data Entry
 departments = [
     {"deptName": "Computer Science", "deptCode": "CSCI"},
     {"deptName": "Mathematics", "deptCode": "MATH"}
@@ -48,7 +48,7 @@ evaluation_results = [
     {"courseObjID": 2, "secID": 2, "semester": "Spring", "year": 2023, "evalMethod": "Project", "studentsPassed": 23}
 ]
 
-# POST Requests to Add Data
+# POST Requests for Data Entry
 for dept in departments:
     requests.post(f'{base_url}/department', json=dept)
 
@@ -63,7 +63,7 @@ for course in courses:
 
 for section in sections:
     requests.post(f'{base_url}/section', json=section)
-    
+
 for obj in objectives:
     requests.post(f'{base_url}/objective', json=obj)
 
@@ -76,8 +76,7 @@ for co in course_objectives:
 for eval_result in evaluation_results:
     requests.post(f'{base_url}/evaluationresult', json=eval_result)
 
-
-# GET Requests to Fetch Data
+# GET Requests for Data Querying
 dept_programs = requests.get(f'{base_url}/programs', params={'department_name': 'Computer Science'}).json()
 dept_faculty = requests.get(f'{base_url}/faculty', params={'department_name': 'Computer Science'}).json()
 eval_results = requests.get(f'{base_url}/evaluation', params={'course_name': 'Advanced Algorithms', 'semester': 'Fall', 'year': 2022}).json()
@@ -86,3 +85,36 @@ eval_results = requests.get(f'{base_url}/evaluation', params={'course_name': 'Ad
 print("Department Programs:", dept_programs)
 print("Department Faculty:", dept_faculty)
 print("Evaluation Results:", eval_results)
+
+# Additional GET Requests for Extended Functionality
+academic_year_results = requests.get(f'{base_url}/evaluation_year', params={'year': '2022'}).json()
+print("Academic Year Evaluation Results:", academic_year_results)
+
+# Additional GET Requests to Test Querying Functionalities
+
+# Test: Listing all programs for a given department
+response = requests.get(f'{base_url}/programs', params={'department_name': 'Computer Science'})
+print("Programs in Computer Science Department:", response.json())
+
+# Test: Listing all faculty in a given department
+response = requests.get(f'{base_url}/faculty', params={'department_name': 'Computer Science'})
+print("Faculty in Computer Science Department:", response.json())
+
+# Test: Listing evaluation results for each section of a course in a given semester and program
+response = requests.get(f'{base_url}/evaluation', params={'course_name': 'Advanced Algorithms', 'semester': 'Fall', 'year': 2022})
+print("Evaluation Results for Advanced Algorithms in Fall 2022:", response.json())
+
+# Test: Listing evaluation results for each objective/sub-objective for an academic year
+response = requests.get(f'{base_url}/evaluation_year', params={'year': 2022})
+print("Evaluation Results for Academic Year 2022:", response.json())
+
+
+# Test: Listing all courses and their objectives for a given program
+# Note: Assuming a route and method for this functionality exists, replace 'program_courses_objectives' with the correct endpoint
+response = requests.get(f'{base_url}/program_courses_objectives', params={'program_name': 'CS Masters'})
+print("Courses and Objectives for CS Masters Program:", response.json())
+
+# Test: Listing all objectives for a given program
+# Note: Assuming a route and method for this functionality exists, replace 'program_objectives' with the correct endpoint
+response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'CS Masters'})
+print("Objectives for CS Masters Program:", response.json())

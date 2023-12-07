@@ -139,4 +139,19 @@ def getEvaluationByYear():
     results = model.getEvaluationResultsByAcademicYear(academic_year)
     return jsonify(results)
 
+@app.route("/program_courses_objectives", methods=["GET"])
+def getProgramCoursesObjectives():
+    model = Model()
+    program_name = request.args.get("program_name")
+    results = model.getCoursesAndObjectivesForProgram(program_name)
+    return jsonify(results)
+
+@app.route("/program_objectives", methods=["GET"])
+def getProgramObjectives():
+    model = Model()
+    program_name = request.args.get("program_name")
+    results = model.getProgramObjectives(program_name)
+    return jsonify(results)
+
+
 
