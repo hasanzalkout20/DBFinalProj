@@ -109,11 +109,9 @@ response = requests.get(f'{base_url}/evaluation_year', params={'year': 2022})
 print("Evaluation Results for Academic Year 2022:", response.json())
 
 # Test: Listing all courses and their objectives for a given program
-# Note: Assuming a route and method for this functionality exists, replace 'program_courses_objectives' with the correct endpoint
 response = requests.get(f'{base_url}/program_courses_objectives', params={'program_name': 'CS Masters'})
 print("Courses and Objectives for CS Masters Program:", response.json())
 
 # Test: Listing all objectives for a given program
-# Note: Assuming a route and method for this functionality exists, replace 'program_objectives' with the correct endpoint
 response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'CS Masters'})
 print("Objectives for CS Masters Program:", response.json())
