@@ -225,7 +225,7 @@ export const addObjective = (objective) => new Promise((resolve, reject) => {
 });
 
 //addSubobjective()
-export const addSubobjective = (subobjective) => new Promise((resolve, reject) => {
+export const addSubObjective = (subobjective) => new Promise((resolve, reject) => {
     const apiConfig = {
 
     }
@@ -295,3 +295,4 @@ export const addEvaluationResult = (evaluationresult) => new Promise((resolve, r
             reject(x);
         });
 });
+
