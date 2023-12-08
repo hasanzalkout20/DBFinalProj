@@ -108,7 +108,7 @@ def create_tables():
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS Course (
-                    CourseID INT AUTO_INCREMENT PRIMARY KEY,
+                    CourseID VARCHAR(8) PRIMARY KEY,
                     DeptID INT NOT NULL,
                     Title VARCHAR(255) NOT NULL,
                     Description TEXT NOT NULL,
@@ -118,7 +118,7 @@ def create_tables():
                 """
                 CREATE TABLE IF NOT EXISTS Section (
                     SecID INT AUTO_INCREMENT PRIMARY KEY,
-                    CourseID INT NOT NULL,
+                    CourseID VARCHAR(8) NOT NULL,
                     Semester VARCHAR(255) NOT NULL,
                     Year INT NOT NULL,
                     FacultyLeadID INT NOT NULL,
@@ -148,7 +148,7 @@ def create_tables():
                 """
                 CREATE TABLE IF NOT EXISTS CourseObjectives (
                     CourseObjID INT AUTO_INCREMENT PRIMARY KEY,
-                    CourseID INT NOT NULL,
+                    CourseID VARCHAR(8) NOT NULL,
                     ObjID INT NOT NULL,
                     FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
                     FOREIGN KEY (ObjID) REFERENCES Objectives(ObjID)
@@ -171,7 +171,7 @@ def create_tables():
                 CREATE TABLE IF NOT EXISTS ProgramCourses (
                     ProgramCourseID INT AUTO_INCREMENT PRIMARY KEY,
                     ProgID INT NOT NULL,
-                    CourseID INT NOT NULL,
+                    CourseID VARCHAR(8) NOT NULL,
                     FOREIGN KEY (ProgID) REFERENCES Program(ProgID),
                     FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
                     UNIQUE (ProgID, CourseID)
@@ -201,8 +201,6 @@ def create_tables():
 
 # Main execution
 if __name__ == "__main__":
-    # drop_tables()    # uncomment to clear tables and data
+    drop_tables()    # uncomment to clear tables and data
     create_database()
     create_tables()
-
-
