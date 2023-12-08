@@ -28,14 +28,14 @@ def getDepartmentFaculty():
     faculty = model.getFacultyByDepartmentName(department_name)
     return jsonify(faculty)
 
-@app.route("/evaluation", methods=["GET"])
-def getEvaluation():
-    model = Model()
-    course_name = request.args.get("course_name")
-    semester = request.args.get("semester")
-    year = request.args.get("year")
-    results = model.getEvaluationResultsByCourseName(course_name, semester, year)
-    return jsonify(results)
+# @app.route("/evaluation", methods=["GET"])
+# def getEvaluation():
+#     model = Model()
+#     course_name = request.args.get("course_name")
+#     semester = request.args.get("semester")
+#     year = request.args.get("year")
+#     results = model.getEvaluationResultsByCourseName(course_name, semester, year)
+#     return jsonify(results)
 
 @app.route("/evaluation_program_semester", methods=["GET"])
 def getEvaluationByProgramAndSemester():
