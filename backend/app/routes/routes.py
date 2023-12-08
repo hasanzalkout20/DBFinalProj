@@ -37,6 +37,18 @@ def getEvaluation():
     results = model.getEvaluationResultsByCourseName(course_name, semester, year)
     return jsonify(results)
 
+@app.route("/evaluation_program_semester", methods=["GET"])
+def getEvaluationByProgramAndSemester():
+    model = Model()
+    program_name = request.args.get("program_name")
+    semester = request.args.get("semester")
+    year = request.args.get("year")
+    results = model.getEvaluationResultsByProgramAndSemester(program_name, semester, year)
+    if not results:
+        return jsonify({"message": "No data found for the specified parameters"}), 404
+    return jsonify(results)
+
+
 @app.route("/evaluation_year", methods=["GET"])
 def getEvaluationByYear():
     model = Model()

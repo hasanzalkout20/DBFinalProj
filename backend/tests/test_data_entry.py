@@ -137,4 +137,7 @@ print("Courses and Objectives for CS Masters Program:", response.json())
 response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'Math PhD'})
 print("Objectives for Math PhD Program:", response.json())
 
+response = requests.get(f'{base_url}/evaluation_program_semester', params={'program_name': 'CS Masters', 'semester': 'Fall', 'year': 2022})
+print("Evaluation Results for CS Masters in Fall 2022:", response.json())
+
 

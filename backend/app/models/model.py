@@ -74,17 +74,23 @@ class Model:
             WHERE Course.Title = %s AND Section.Semester = %s AND Section.Year = %s
         ''', (course_name, semester, year))
         return self.cursor.fetchall()
+    
+    def getEvaluationResultsByProgramAndSemester(self, program_name, semester, year):
+        try:
+            self.cursor.execute('''
+                SELECT Section.SecID, Course.Title, ObjectiveEval.*
+                FROM ObjectiveEval
+                INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+                INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
+                INNER JOIN Course ON Course.CourseID = Section.CourseID
+                INNER JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
+                INNER JOIN Program ON Program.ProgID = ProgramCourses.ProgID
+                WHERE Program.ProgName = %s AND Section.Semester = %s AND Section.Year = %s
+            ''', (program_name, semester, year))
+            return self.cursor.fetchall()
+        except Error as e:
+            return {"error": str(e)}
 
-
-    def getEvaluationResultsByCourseName(self, course_name, semester, year):
-        self.cursor.execute('''
-            SELECT ObjectiveEval.*
-            FROM ObjectiveEval
-            INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
-            INNER JOIN Course ON Section.CourseID = Course.CourseID
-            WHERE Course.Title = %s AND Section.Semester = %s AND Section.Year = %s
-        ''', (course_name, semester, year))
-        return self.cursor.fetchall()
     
     def getEvaluationResultsByAcademicYear(self, academic_year):
         self.cursor.execute('''
