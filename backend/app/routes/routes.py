@@ -37,6 +37,17 @@ def getDepartmentFaculty():
 #     results = model.getEvaluationResultsByCourseName(course_name, semester, year)
 #     return jsonify(results)
 
+# @app.route("/evaluation_program_semester", methods=["GET"])
+# def getEvaluationByProgramAndSemester():
+#     model = Model()
+#     program_name = request.args.get("program_name")
+#     semester = request.args.get("semester")
+#     year = request.args.get("year")
+#     results = model.getEvaluationResultsByProgramAndSemester(program_name, semester, year)
+#     if not results:
+#         return jsonify({"message": "No data found for the specified parameters"}), 404
+#     return jsonify(results)
+
 @app.route("/evaluation_program_semester", methods=["GET"])
 def getEvaluationByProgramAndSemester():
     model = Model()
@@ -46,15 +57,23 @@ def getEvaluationByProgramAndSemester():
     results = model.getEvaluationResultsByProgramAndSemester(program_name, semester, year)
     if not results:
         return jsonify({"message": "No data found for the specified parameters"}), 404
-    return jsonify(results)
+    return jsonify({"results": results})
 
+# @app.route("/evaluation_year", methods=["GET"])
+# def getEvaluationByYear():
+#     model = Model()
+#     academic_year = request.args.get("year")
+#     results = model.getEvaluationResultsByAcademicYear(academic_year)
+#     return jsonify(results)
 
 @app.route("/evaluation_year", methods=["GET"])
 def getEvaluationByYear():
     model = Model()
     academic_year = request.args.get("year")
     results = model.getEvaluationResultsByAcademicYear(academic_year)
-    return jsonify(results)
+    if not results:
+        return jsonify({"message": "No data found for the specified parameters"}), 404
+    return jsonify({"results": results})
 
 @app.route("/program_courses_objectives", methods=["GET"])
 def getProgramCoursesObjectives():

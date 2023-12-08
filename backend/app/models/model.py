@@ -52,7 +52,6 @@ class Model:
         ''', (program_name,))
         return self.cursor.fetchall()
 
-
     def getProgramObjectives(self, program_name):       
         self.cursor.execute('''
             SELECT Objectives.ObjCode, Objectives.Description
@@ -75,14 +74,33 @@ class Model:
         ''', (course_name, semester, year))
         return self.cursor.fetchall()
     
+    # def getEvaluationResultsByProgramAndSemester(self, program_name, semester, year):
+    #     try:
+    #         self.cursor.execute('''
+    #             SELECT Section.SecID, Course.Title, ObjectiveEval.*
+    #             FROM ObjectiveEval
+    #             INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+    #             INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
+    #             INNER JOIN Course ON Course.CourseID = Section.CourseID
+    #             INNER JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
+    #             INNER JOIN Program ON Program.ProgID = ProgramCourses.ProgID
+    #             WHERE Program.ProgName = %s AND Section.Semester = %s AND Section.Year = %s
+    #         ''', (program_name, semester, year))
+    #         return self.cursor.fetchall()
+    #     except Error as e:
+    #         return {"error": str(e)}
     def getEvaluationResultsByProgramAndSemester(self, program_name, semester, year):
         try:
             self.cursor.execute('''
-                SELECT Section.SecID, Course.Title, ObjectiveEval.*
+                SELECT Course.Title AS CourseTitle, Section.Semester, Section.Year, Faculty.Name AS FacultyName, 
+                       Objectives.ObjCode, SubObjectives.SubObjCode, ObjectiveEval.EvalMethod, ObjectiveEval.StudentsPassed
                 FROM ObjectiveEval
                 INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+                INNER JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
+                LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
                 INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
-                INNER JOIN Course ON Course.CourseID = Section.CourseID
+                INNER JOIN Course ON Section.CourseID = Course.CourseID
+                INNER JOIN Faculty ON Section.FacultyLeadID = Faculty.FacultyID
                 INNER JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
                 INNER JOIN Program ON Program.ProgID = ProgramCourses.ProgID
                 WHERE Program.ProgName = %s AND Section.Semester = %s AND Section.Year = %s
@@ -90,19 +108,37 @@ class Model:
             return self.cursor.fetchall()
         except Error as e:
             return {"error": str(e)}
-
     
+    # def getEvaluationResultsByAcademicYear(self, academic_year):
+    #     self.cursor.execute('''
+    #         SELECT ObjectiveEval.*, Objectives.ObjCode, SubObjectives.SubObjCode
+    #         FROM ObjectiveEval
+    #         JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+    #         JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
+    #         LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
+    #         JOIN Section ON ObjectiveEval.SecID = Section.SecID
+    #         WHERE Section.Year = %s
+    #     ''', (academic_year,))
+    #     return self.cursor.fetchall()
+    
+    # Modified method to get evaluation results by academic year
     def getEvaluationResultsByAcademicYear(self, academic_year):
-        self.cursor.execute('''
-            SELECT ObjectiveEval.*, Objectives.ObjCode, SubObjectives.SubObjCode
-            FROM ObjectiveEval
-            JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
-            JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
-            LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
-            JOIN Section ON ObjectiveEval.SecID = Section.SecID
-            WHERE Section.Year = %s
-        ''', (academic_year,))
-        return self.cursor.fetchall()
+        try:
+            self.cursor.execute('''
+                SELECT Course.Title AS CourseTitle, Section.Semester, Section.Year, Faculty.Name AS FacultyName, 
+                       Objectives.ObjCode, SubObjectives.SubObjCode, ObjectiveEval.EvalMethod, ObjectiveEval.StudentsPassed
+                FROM ObjectiveEval
+                INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+                INNER JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
+                LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
+                INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
+                INNER JOIN Course ON Section.CourseID = Course.CourseID
+                INNER JOIN Faculty ON Section.FacultyLeadID = Faculty.FacultyID
+                WHERE Section.Year = %s
+            ''', (academic_year,))
+            return self.cursor.fetchall()
+        except Error as e:
+            return {"error": str(e)}
     
     def getCoursesAndObjectivesForProgram(self, program_name):
         self.cursor.execute('''
