@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addDepartment, addFaculty, addProgram, addCourse, addSection, addObjective, addSubObjective, linkCourseObjective, getDepartmentPrograms, getDepartmentFaculty, getEvaluation } from "../../api";
 import { TextField } from "../common/TextField";
 import { Department, Faculty, Program, Section, Course, Objective, CourseObjective, SubObjective} from "../../models";
+
 
 export const Home = () => {
     const [department, setDepartment] = useState("");
@@ -12,6 +14,8 @@ export const Home = () => {
     const [coursesList, setCoursesList] = useState([]);
     const [objectivesList, setObjectivesList] = useState([]);
     const [evaluationResults, setEvaluationResults] = useState([]);
+
+    const navigate = useNavigate();
 
     const handleDepartmentChange = (event) => {
         setDepartment(event.target.value);
@@ -119,24 +123,155 @@ export const Home = () => {
     
 
     return (
-            <div>
-                <div>
-                    <label htmlFor="department">Department:</label>
-                    <TextField
-                        id="department"
-                        value={department}
-                        onChange={handleDepartmentChange}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="program">Program:</label>
-                    <TextField
-                        id="program"
-                        value={program}
-                        onChange={handleProgramChange}
-                    />
-                </div>
-                {/* Other input fields for semester, academic year, etc. */}
-            </div>
+        <>
+                
+        <div>
+            <h3> Add:</h3>
+        </div>
+    
+        <form name = "programs" id = "programs">
+            <button
+                type = "button"
+                onClick = {() => {
+                    // getPrograms(department);
+                    navigate("/");
+                }}
+            >
+                Add Department
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    // getPrograms(department)
+                }}
+            >
+                Add Faculty
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    // getPrograms(department)
+                }}
+            >
+                Add Program
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    // getPrograms(department)
+                }}
+            >
+                Add Course
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Add Section
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Add Objective
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Add Sub-Objective
+            </button>
+
+        </form>
+
+        <div>
+            <h3>Assign:</h3>
+        </div>
+
+        <form name = "programs" id = "programs"> 
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Assign a Learning Objective
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Assign a Course
+            </button>
+
+        </form>
+
+        <div>
+            <h3>Display:</h3>
+        </div>
+
+        <form name = "programs" id = "programs"> 
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Show Programs
+            </button>
+            
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Show Courses
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Show Courses
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    //getPrograms(department)
+                }}
+            >
+                Show Evaluation Results from Program
+            </button>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                   //getPrograms(department)
+                }}
+            >
+                Show Evaluation Results from Dates
+            </button>
+        
+        </form>
+    </>
         );
 };

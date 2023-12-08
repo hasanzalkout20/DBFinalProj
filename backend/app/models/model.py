@@ -19,6 +19,14 @@ class Model:
             database=database
         )
         self.cursor = self.connection.cursor()
+        
+    # Get all tables
+    def getAllDepartments(self):
+        self.cursor.execute('''
+            SELECT * FROM Department
+        ''')
+        departments = self.cursor.fetchall()
+        return departments
 
     def getProgramDepartments(self, department_name):
     # Use a subquery to get the department ID from the department name
@@ -112,15 +120,15 @@ class Model:
     # DATA ENTRY METHODS
 
     # Method to insert a new department
-    def insert_department(self, deptName, deptCode):
+    def insert_department(self, deptId, deptName, deptCode):
         try:
             # Check if department already exists
             self.cursor.execute("SELECT DeptID FROM Department WHERE DeptName = %s OR DeptCode = %s", (deptName, deptCode))
             if self.cursor.fetchone():
                 return {"message": "Department already exists"}
             # Insert new department if not exist
-            sql = "INSERT INTO Department (DeptName, DeptCode) VALUES (%s, %s)"
-            self.cursor.execute(sql, (deptName, deptCode))
+            sql = "INSERT INTO Department (DeptID, DeptName, DeptCode) VALUES (%s, %s, %s)"
+            self.cursor.execute(sql, (deptId, deptName, deptCode))
             self.connection.commit()
             return {"message": "Department added successfully"}
         except Error as e:
