@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addDepartment, getAllDepartments } from "../../api";
+import { addDepartment, getAllDepartments, linkCourseObjective } from "../../api";
 import { TextField } from "../common/TextField";
 import { Department, Faculty, Program, Section, Course, Objective, SubObjective, CourseObjective } from "../../models";
 
-export const AddDept = () => {
+export const LinkCo = () => {
     // const [ departments, setDepartments ] = useState([]);
     const [ id, setId ] = useState("");
-    const [ name, setName ] = useState("");
-    const [ code, setCode ] = useState("");
+    const [ progid, setprogid ] = useState("");
+    const [ objid, setobjid ] = useState("");
     const [ success, setSuccess ] = useState("");
+   
 
     const handleSubmit = () => {
-        addDepartment(new Department(id, name, code)).then(x => {
+        linkCourseObjective(id, progid, objid).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -30,14 +31,14 @@ export const AddDept = () => {
         </div>
         
         <form name = "programs" id = "programs">
-            <TextField label = "Department ID: " value = { id } setValue={setId}/>
-            <TextField label = "Department Name: " value = { name } setValue={setName}/>
-            <TextField label = "Department Code: " value = { code } setValue={setCode}/>
+            <TextField label = "Course ID: " value = { id } setValue={setId}/>
+            <TextField label = "Program ID: " value = { progid } setValue={setprogid}/>
+            <TextField label = "Objective ID: " value = { objid } setValue={setobjid}/>
             <button
                 type = "button"
                 onClick = {() => handleSubmit()}
             >
-                Add Department
+                Link!
             </button>
         </form>
 
@@ -56,5 +57,3 @@ export const AddDept = () => {
         { success }
     </>
 };
-
-

@@ -11,21 +11,19 @@ export const AddFaculty = () => {
     const [ email, setEmail ] = useState("");
     const [ deptID, setDeptId ] = useState("");
     const [ position, setPosition ] = useState("");
+    const [ success, setSuccess ] = useState("");
     
 
     const handleSubmit = () => {
         addFaculty(new Faculty(id, name, email, deptID, position)).then(x => {
-            getDepartmentFaculty().then(x => setFaculty(x));
+            // getAllDepartments().then(x => setDepartments(x));
+            setSuccess("Successfully added");
+        }).catch(x => {
+            setSuccess("");
         })
     }
 
-    useEffect(() => {
-        getDepartmentFaculty().then(x => setFaculty(x));
-    }, []);
-
-    useEffect(() => {
-        console.log(faculty)
-    }, [faculty])
+ 
 
     return <>
         <div>
@@ -41,27 +39,13 @@ export const AddFaculty = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    getDepartmentFaculty(Faculty)
+                    handleSubmit()
                 }}
             >
                 Add Faculty
             </button>
         </form>
 
-        <ul>
-            {
-                faculty.map((faculty, index) => {
-                    return <li key = { index }>{ faculty[0] }
-                        <ul>
-                            <li>{ department[1] }</li>
-                            <li>{ department[2] }</li>
-                            <li>{ department[3] }</li>
-                            <li>{ department[4] }</li>
-                            
-                        </ul>
-                    </li>
-                })
-            }
-        </ul>
+        {success}
     </>
 };

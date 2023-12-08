@@ -10,20 +10,18 @@ export const AddCourse = () => {
     const [ deptID, setDeptID ] = useState("");
     const [ title, setTitle ] = useState("");
     const [ description, setDescription] = useState("");
+    const [ success, setSuccess ] = useState("");
 
     const handleSubmit = () => {
         addCourse(new Course(id, deptID, title, description)).then(x => {
-            getAllCourses().then(x => setCourses(x));  //???????
+            // getAllDepartments().then(x => setDepartments(x));
+            setSuccess("Successfully added");
+        }).catch(x => {
+            setSuccess("");
         })
     }
 
-    useEffect(() => {
-        getAllCourses().then(x => setCourses(x)); //???????
-    }, []);
 
-    useEffect(() => {
-        console.log(courses)
-    }, [courses])
 
     return <>
         <div>
@@ -38,14 +36,14 @@ export const AddCourse = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    getAllCourses(Course) // ?????
+                    handleSubmit()
                 }}
             >
                 Add Course
             </button>
         </form>
 
-        <ul>
+        {/* <ul>
             {
                 courses.map((course, index) => {
                     return <li key = { index }>{ course[0] }
@@ -57,6 +55,9 @@ export const AddCourse = () => {
                     </li>
                 })
             }
-        </ul>
+        </ul> */}
+
+
+        { success }
     </>
 };

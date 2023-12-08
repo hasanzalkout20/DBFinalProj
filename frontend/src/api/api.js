@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // define api endpoint in the backend
-const baseEndpoint = "http://localhost:8000";
+const baseEndpoint = "http://127.0.0.1:8000";
 
 export const getAllDepartments = () => new Promise((resolve, reject) => {
     // create apiConfig object with a property
@@ -29,10 +29,12 @@ export const getAllDepartments = () => new Promise((resolve, reject) => {
 
 // getDepartmentPrograms()
 // takes a department parameter and returns a Promise
-export const getDepartmentPrograms = (department) => new Promise((resolve, reject) => {
+export const getDepartmentPrograms = (department_name) => new Promise((resolve, reject) => {
     // create apiConfig object with a property
     const apiConfig = {
-        department
+        params: {
+            department_name
+        }
     };
 
     // log endpoint to the console
@@ -54,10 +56,12 @@ export const getDepartmentPrograms = (department) => new Promise((resolve, rejec
 });
 
 // getDepartmentFaculty() - takes a department parameter and returns a Promise
-export const getDepartmentFaculty = (department) => new Promise((resolve, reject) => {
+export const getDepartmentFaculty = (department_name) => new Promise((resolve, reject) => {
     // create apiConfig object with a property
     const apiConfig = {
-        department
+        params: {
+            department_name
+        }
     };
 
     // log endpoint to the console
@@ -79,20 +83,52 @@ export const getDepartmentFaculty = (department) => new Promise((resolve, reject
 });
 
 // getEvaluation() - takes a department parameter and returns a Promise
-export const getEvaluation = (department) => new Promise((resolve, reject) => {
+export const getEvaluation = (semester, program_name, year) => new Promise((resolve, reject) => {
     // create apiConfig object with a property
     const apiConfig = {
-        department
+        params: {
+            program_name,
+            semester,
+            year
+        }
+        
     };
 
     // log endpoint to the console
-    console.log(`${ baseEndpoint }/evaluation`);
+    console.log(`${ baseEndpoint }/evaluation_program_semester`);
 
     // log apiConfig object to the console
     console.log(apiConfig);
 
     // use axios to make a get request 
-    axios.get(`${ baseEndpoint }/evaluation`, apiConfig)
+    axios.get(`${ baseEndpoint }/evaluation_program_semester`, apiConfig)
+        // if request is success, resolve Promise iwth data received from request
+        .then(x => resolve(x.data))
+
+        // if there is an error, alerts the error and rejects the Promise with the error object received 
+        .catch(x => {
+            alert(x);
+            reject(x);
+        });
+});
+
+// evaluationYear() - 
+export const getEvaluationYear = (year) => new Promise((resolve, reject) => {
+    // create apiConfig object with a property
+    const apiConfig = {
+        params: {
+            year
+        }
+    };
+
+    // log endpoint to the console
+    console.log(`${ baseEndpoint }/evaluation_year`);
+
+    // log apiConfig object to the console
+    console.log(apiConfig);
+
+    // use axios to make a get request 
+    axios.get(`${ baseEndpoint }/evaluation_year`, apiConfig)
         // if request is success, resolve Promise iwth data received from request
         .then(x => resolve(x.data))
 
@@ -161,7 +197,7 @@ export const addProgram = (program) => new Promise((resolve, reject) => {
     console.log(`${ baseEndpoint }/program`);
 
     // for debugging: log apiConfig object to the console
-    console.log(apiConfig);
+    console.log(program);
 
     // use axios to make a post request 
     axios.post(`${ baseEndpoint }/program`, program, apiConfig)
@@ -272,20 +308,44 @@ export const addSubObjective = (subobjective) => new Promise((resolve, reject) =
         });
 });
 
-//linkCourseObjective():
-export const linkCourseObjective = (courseobjective) => new Promise((resolve, reject) => {
+//def linkCourseToProgram():
+export const linkCourseToProgram = (CourseID, ProgID) => new Promise((resolve, reject) => {
     const apiConfig = {
+
 
     }
 
     // for debugging: log endpoint to the console
-    console.log(`${ baseEndpoint }/courseobjective`);
+    console.log(`${ baseEndpoint }/link_course_program`);
 
     // for debugging: log apiConfig object to the console
     console.log(apiConfig);
 
     // use axios to make a post request 
-    axios.post(`${ baseEndpoint }/courseobjective`, courseobjective, apiConfig)
+    axios.post(`${ baseEndpoint }/link_course_program`, { CourseID, ProgID }, apiConfig)
+        // if request is success, resolve Promise iwth data received from request
+        .then(x => resolve(x.data))
+
+        // if there is an error, alerts the error and rejects the Promise with the error object received 
+        .catch(x => {
+            alert(x);
+            reject(x);
+        });
+});
+
+export const linkCourseObjective = (CourseID, ProgID, ObjID) => new Promise((resolve, reject) => {
+    const apiConfig = {
+
+    }
+
+    // for debugging: log endpoint to the console
+    console.log(`${ baseEndpoint }/assign_objective`);
+
+    // for debugging: log apiConfig object to the console
+    console.log(apiConfig);
+
+    // use axios to make a post request 
+    axios.post(`${ baseEndpoint }/assign_objective`, { CourseID, ProgID, ObjID }, apiConfig)
         // if request is success, resolve Promise iwth data received from request
         .then(x => resolve(x.data))
 
@@ -303,13 +363,71 @@ export const addEvaluationResult = (evaluationresult) => new Promise((resolve, r
     }
 
     // for debugging: log endpoint to the console
-    console.log(`${ baseEndpoint }/evaluationresult`);
+    console.log(`${ baseEndpoint }/evaluation`);
 
     // for debugging: log apiConfig object to the console
     console.log(apiConfig);
 
     // use axios to make a post request 
-    axios.post(`${ baseEndpoint }/evaluationresult`, evaluationresult, apiConfig)
+    axios.post(`${ baseEndpoint }/evaluation`, evaluationresult, apiConfig)
+        // if request is success, resolve Promise iwth data received from request
+        .then(x => resolve(x.data))
+
+        // if there is an error, alerts the error and rejects the Promise with the error object received 
+        .catch(x => {
+            alert(x);
+            reject(x);
+        });
+});
+
+
+// @app.route("/program_courses_objectives", methods=["GET"])
+// def getProgramCoursesObjectives():
+//     model = Model()
+//     program_name = request.args.get("program_name")
+//     results = model.getCoursesAndObjectivesForProgram(program_name)
+//     return jsonify(results)
+
+// getDepartmentFaculty() - takes a department parameter and returns a Promise
+export const getProgramCoursesObjectives = (program_name) => new Promise((resolve, reject) => {
+    // create apiConfig object with a property
+    const apiConfig = {
+        params: {
+            program_name
+        }
+    };
+
+    // use axios to make a get request 
+    axios.get(`${ baseEndpoint }/program_courses_objectives`, apiConfig)
+        // if request is success, resolve Promise iwth data received from request
+        .then(x => resolve(x.data))
+
+        // if there is an error, alerts the error and rejects the Promise with the error object received 
+        .catch(x => {
+            alert(x);
+            reject(x);
+        });
+});
+
+
+// @app.route("/program_objectives", methods=["GET"])
+// def getProgramObjectives():
+//     model = Model()
+//     program_name = request.args.get("program_name")
+//     results = model.getProgramObjectives(program_name)
+//     return jsonify(results)
+
+// getDepartmentFaculty() - takes a department parameter and returns a Promise
+export const getProgramObjectives = (department) => new Promise((resolve, reject) => {
+    // create apiConfig object with a property
+    const apiConfig = {
+        params: {
+            department
+        }
+    };
+
+    // use axios to make a get request 
+    axios.get(`${ baseEndpoint }/faculty`, apiConfig)
         // if request is success, resolve Promise iwth data received from request
         .then(x => resolve(x.data))
 

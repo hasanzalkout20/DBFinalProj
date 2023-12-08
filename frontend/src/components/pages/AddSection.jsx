@@ -12,21 +12,19 @@ export const AddSection = () => {
     const [ year, setYear ] = useState("");
     const [ facultyLeadID, setFacultyLeadID ] = useState("");
     const [ enrollCount, setEnrollCount ] = useState("");
+    const [ success, setSuccess ] = useState("");
 
 
     const handleSubmit = () => {
         addSection(new Section(secId, courseID, semester, year, facultyLeadID, enrollCount)).then(x => {
-            getAllSections().then(x => setSections(x));  
+            // getAllDepartments().then(x => setDepartments(x));
+            setSuccess("Successfully added");
+        }).catch(x => {
+            setSuccess("");
         })
     }
 
-    useEffect(() => {
-        getAllSections().then(x => setSections(x)); 
-    }, []);
-
-    useEffect(() => {
-        console.log(sections)
-    }, [sections])
+  
 
     return <>
         <div>
@@ -43,27 +41,13 @@ export const AddSection = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    getAllSections(Section)
+                    handleSubmit()
                 }}
             >
                 Add Section
             </button>
         </form>
 
-        <ul>
-            {
-                sections.map((section, index) => {
-                    return <li key = { index }>{ section[0] }
-                        <ul>
-                            <li>{ section[1] }</li>
-                            <li>{ section[2] }</li>
-                            <li>{ section[3] }</li>
-                            <li>{ section[4] }</li>
-                            <li>{ section[5] }</li>
-                        </ul>
-                    </li>
-                })
-            }
-        </ul>
+        {success}
     </>
 };
