@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addDepartment, addFaculty, addProgram, addCourse, addSection, addObjective, addSubObjective, linkCourseObjective, getDepartmentPrograms, getDepartmentFaculty, getEvaluation } from "../../api";
+import { addDepartment, addFaculty, addProgram, addCourse, addSection, addObjective, addSubObjective, linkCourseObjective, getDepartmentPrograms, getDepartmentFaculty, getEvaluation, getProgramCoursesObjectives, getProgramObjectives, getEvaluationYear } from "../../api";
 import { TextField } from "../common/TextField";
 import { Department, Faculty, Program, Section, Course, Objective, CourseObjective, SubObjective} from "../../models";
 
@@ -8,90 +8,37 @@ import { Department, Faculty, Program, Section, Course, Objective, CourseObjecti
 export const Home = () => {
     const [department, setDepartment] = useState("");
     const [program, setProgram] = useState("");
+    const [ faculty, setFaculty ] = useState([]);
     const [semester, setSemester] = useState("");
+    const [year, setYear] = useState("");
     const [academicYear, setAcademicYear] = useState("");
     const [programsList, setProgramsList] = useState([]);
     const [coursesList, setCoursesList] = useState([]);
     const [objectivesList, setObjectivesList] = useState([]);
+    const [objectivesList2, setObjectivesList2] = useState([]);
     const [evaluationResults, setEvaluationResults] = useState([]);
 
     const navigate = useNavigate();
 
-    const handleDepartmentChange = (event) => {
-        setDepartment(event.target.value);
-    };
-
-    const handleProgramChange = (event) => {
-        setProgram(event.target.value);
-    };
-
-    const handleSemesterChange = (event) => {
-        setSemester(event.target.value);
-    };
-
-    const handleAcademicYearChange = (event) => {
-        setAcademicYear(event.target.value);
-    };
-
-    const getDepartmentPrograms = (department) => { 
-        getDepartmentPrograms(department).then(x => setProgram(x));
-        getDepartmentPrograms(department).then(x => console.log(x));
-
+    const handleDepartmentSubmit = (department) => { 
+        getDepartmentPrograms(department).then(x => setProgramsList(x));
+        getDepartmentFaculty(department).then(x => setFaculty(x));
     }
 
-    const getDepartmentFaculty = (department) => { 
-        getDepartmentFaculty(department).then(x => setProgram(x));
-        getDepartmentFaculty(department).then(x => console.log(x));
-
-    }
-    
-    const getEvaluation = (department) => { 
-        getEvaluation(department).then(x => setProgram(x));
-        getEvaluation(department).then(x => console.log(x));
-
+    const handleProgramSubmit = (program) => { 
+        getProgramCoursesObjectives(program).then(x => setCoursesList(x));
+        getProgramObjectives(program).then(x => setObjectivesList(x));
     }
 
-    
-    // repeat for each table
-    function addDepartment(DeptID, DeptName, DeptCode) {
-        const program = new Program(DeptID, DeptName, DeptCode);
-
+    const handleSemesterProgramSubmit = (semester, year, program) => {
+        getEvaluation(semester, program, year).then(x => setEvaluationResults(x));
     }
 
-    function addFaculty(FacultyID, Name, Email, DeptID, Position) {
-        const program = new Program(FacultyID, Name, Email, DeptID, Position);
 
+    const handleAcademicYearSubmit = (year) => {
+        getEvaluationYear(year).then(x => setObjectivesList2(x));
     }
 
-    function addProgram(ProgID, ProgName, DeptID, FacultyLeadID, FacultyLeadEmail) {
-        const program = new Program(ProgID, ProgName, DeptID, FacultyLeadID, FacultyLeadEmail);
-
-    }
-
-    function addCourse(CourseID, DeptID, Title, Description) {
-        const program = new Program(CourseID, DeptID, Title, Description);
-
-    }
-
-    function addSection(SecID, CourseID, Semester, Year, FacultyLeadID, EnrollCount) {
-        const program = new Program(SecID, CourseID, Semester, Year, FacultyLeadID, EnrollCount);
-
-    }
-
-    function addObjective(ObjID, ObjCode, Description, DeptID) {
-        const program = new Program(ObjID, ObjCode, Description, DeptID);
-
-    }
-
-    function addSubObjective(SubObjID, SubObjCode, Description, ParentObjID) {
-        const program = new Program(SubObjID, SubObjCode, Description, ParentObjID);
-
-    }
-
-    function linkCourseObjective(CourseObjID, CourseID, ObjID) {
-        const program = new Program(CourseObjID, CourseID, ObjID);
-
-    }
 
 // Data Entry:
 //      Enter basic information about
@@ -134,7 +81,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     // getPrograms(department);
-                    navigate("/");
+                    navigate("/add/department");
                 }}
             >
                 Add Department
@@ -144,6 +91,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     // getPrograms(department)
+                    navigate("/add/faculty");
                 }}
             >
                 Add Faculty
@@ -153,6 +101,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     // getPrograms(department)
+                    navigate("/add/program");
                 }}
             >
                 Add Program
@@ -162,6 +111,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     // getPrograms(department)
+                    navigate("/add/course");
                 }}
             >
                 Add Course
@@ -171,6 +121,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     //getPrograms(department)
+                    navigate("/add/section");
                 }}
             >
                 Add Section
@@ -180,6 +131,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     //getPrograms(department)
+                    navigate("/add/objective");
                 }}
             >
                 Add Objective
@@ -189,6 +141,7 @@ export const Home = () => {
                 type = "button"
                 onClick = {() => {
                     //getPrograms(department)
+                    navigate("/add/sub_objective");
                 }}
             >
                 Add Sub-Objective
@@ -204,7 +157,7 @@ export const Home = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    //getPrograms(department)
+                    navigate("/link/objective")
                 }}
             >
                 Assign a Learning Objective
@@ -213,65 +166,156 @@ export const Home = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    //getPrograms(department)
+                    navigate("/link/program")
                 }}
             >
                 Assign a Course
             </button>
 
         </form>
+        
+        <form name = "departments" id = "departments">
+            <TextField label = "Department : " value = {department } setValue={setDepartment}/>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    handleDepartmentSubmit(department)
+                }}
+            >
+                Submit
+            </button>
+        </form>
 
         <div>
-            <h3>Display:</h3>
+            Programs:
+            <ul>
+                {
+                    programsList.map((program, i) => {
+                        return <li key = { i }>
+                            { program }
+                        </li>
+                    })
+                }
+            </ul>
         </div>
 
-        <form name = "programs" id = "programs"> 
-            <button
-                type = "button"
-                onClick = {() => {
-                    //getPrograms(department)
-                }}
-            >
-                Show Programs
-            </button>
-            
-            <button
-                type = "button"
-                onClick = {() => {
-                    //getPrograms(department)
-                }}
-            >
-                Show Courses
-            </button>
-
-            <button
-                type = "button"
-                onClick = {() => {
-                    //getPrograms(department)
-                }}
-            >
-                Show Courses
-            </button>
-
-            <button
-                type = "button"
-                onClick = {() => {
-                    //getPrograms(department)
-                }}
-            >
-                Show Evaluation Results from Program
-            </button>
-
-            <button
-                type = "button"
-                onClick = {() => {
-                   //getPrograms(department)
-                }}
-            >
-                Show Evaluation Results from Dates
-            </button>
+        <div>
+            Faculty:
+            <ul>
+                {
+                    faculty.map((f, i) => {
+                        return <li key = { i }>
+                            { f }
+                        </li>
+                    })
+                }
+            </ul>
+        </div>
         
+        
+        <form name = "departments" id = "departments">
+            <TextField label = "Program : " value = {program } setValue={setProgram}/>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    handleProgramSubmit(program)
+                }}
+            >
+                Submit
+            </button>
         </form>
+
+        <div>
+            Courses:
+            <ul>
+                {
+                    coursesList.map((program, i) => {
+                        return <li key = { i }>
+                            { program }
+                        </li>
+                    })
+                }
+            </ul>
+        </div>
+
+        <div>
+            Objectives:
+            <ul>
+                {
+                    objectivesList.map((f, i) => {
+                        return <li key = { i }>
+                            { f }
+                        </li>
+                    })
+                }
+            </ul>
+        </div>
+
+        
+        <form name = "departments" id = "departments">
+            <TextField label = "Semester : " value = {semester } setValue={setSemester}/>
+            <TextField label = "Year : " value = {year } setValue={setYear}/>
+            <TextField label = "Program : " value = {program } setValue={setProgram}/>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    handleSemesterProgramSubmit(semester, year, program)
+                }}
+            >
+                Submit
+            </button>
+        </form>
+
+        <div>
+            Evaluation Results for each section:
+            <ul>
+                {
+                    evaluationResults.map((program, i) => {
+                        return <li key = { i }>
+                            { program }
+                        </li>
+                    })
+                }
+            </ul>
+        </div>
+
+       
+
+        
+
+        {/* <TextField label = "Academic year : " value = {name } setValue={setName}/> */}
+        <form name = "departments" id = "departments">
+            <TextField label = "Academic year : " value = {academicYear } setValue={setAcademicYear}/>
+
+            <button
+                type = "button"
+                onClick = {() => {
+                    handleAcademicYearSubmit(academicYear)
+                }}
+            >
+                Submit
+            </button>
+        </form>
+
+        <div>
+            Evaluation Results for each objective/sub-objective:
+            <ul>
+                {
+                    objectivesList2.map((program, i) => {
+                        return <li key = { i }>
+                            { program }
+                        </li>
+                    })
+                }
+            </ul>
+        </div>
+
     </>
+
+        
         );
+
 };

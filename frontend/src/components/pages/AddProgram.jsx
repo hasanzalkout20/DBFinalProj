@@ -6,25 +6,22 @@ import { Department, Faculty, Program, Section, Course, Objective, SubObjective,
 
 export const AddProgram = () => {
     const [ programs, setPrograms ] = useState([]);
-    const [ id, setId ] = useState("");
+    const [ id, setID ] = useState("");
     const [ name, setName ] = useState("");
     const [ deptID, setDeptID ] = useState("");
     const [ facultyLeadID, setFacultyLeadID ] = useState("");
     const [ facultyLeadEmail, setFacultyLeadEmail ] = useState("");
+    const [ success, setSuccess ] = useState("");
 
     const handleSubmit = () => {
         addProgram(new Program(id, name, deptID, facultyLeadID, facultyLeadEmail)).then(x => {
-            getDepartmentPrograms().then(x => setPrograms(x));
+            // getAllDepartments().then(x => setDepartments(x));
+            setSuccess("Successfully added");
+        }).catch(x => {
+            setSuccess("");
         })
     }
 
-    useEffect(() => {
-        getDepartmentPrograms().then(x => setPrograms(x));
-    }, []);
-
-    useEffect(() => {
-        console.log(programs)
-    }, [programs])
 
     return <>
         <div>
@@ -40,26 +37,13 @@ export const AddProgram = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    getPrograms(Program)
+                    handleSubmit();
                 }}
             >
                 Add Program
             </button>
         </form>
 
-        <ul>
-            {
-                programs.map((program, index) => {
-                    return <li key = { index }>{ program[0] }
-                        <ul>
-                            <li>{ program[1] }</li>
-                            <li>{ program[2] }</li>
-                            <li>{ program[3] }</li>
-                            <li>{ program[4] }</li>
-                        </ul>
-                    </li>
-                })
-            }
-        </ul>
+        {success}
     </>
 };

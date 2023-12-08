@@ -9,22 +9,18 @@ export const AddObj = () => {
     const [ id, setId ] = useState("");
     const [ code, setCode ] = useState("");
     const [ description, setDescription ] = useState("");
-    const [ deptId, setDeptID ] = useState("");
+    const [ deptID, setDeptID ] = useState("");
+    const [ success, setSuccess ] = useState("");
 
 
     const handleSubmit = () => {
         addObjective(new Objective(id, code, description, deptID)).then(x => {
-            getAllObjectives().then(x => setObjectives(x));
+            // getAllDepartments().then(x => setDepartments(x));
+            setSuccess("Successfully added");
+        }).catch(x => {
+            setSuccess("");
         })
     }
-
-    useEffect(() => {
-        getAllObjectives().then(x => setObjectives(x));
-    }, []);
-
-    useEffect(() => {
-        console.log(objectives)
-    }, [objectives])
 
     return <>
         <div>
@@ -35,29 +31,17 @@ export const AddObj = () => {
             <TextField label = "Objective ID: " value = { id } setValue={setId}/>
             <TextField label = "Objective Code: " value = { code } setValue={setCode}/>
             <TextField label = "Description: " value = { description } setValue={setDescription}/>
-            <TextField label = "Department ID:" value = { deptId } setValue={setDeptID}/>
+            <TextField label = "Department ID:" value = { deptID } setValue={setDeptID}/>
             <button
                 type = "button"
                 onClick = {() => {
-                    getAllObjectives(Objective)
+                    handleSubmit()
                 }}
             >
                 Add Learning Objective
             </button>
         </form>
 
-        <ul>
-            {
-                objectives.map((objective, index) => {
-                    return <li key = { index }>{ objective[0] }
-                        <ul>
-                            <li>{ objective[1] }</li>
-                            <li>{ objective[2] }</li>
-                            <li>{ objective[3] }</li>
-                        </ul>
-                    </li>
-                })
-            }
-        </ul>
+        {success}
     </>
 };

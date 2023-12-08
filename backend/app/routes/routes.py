@@ -95,8 +95,8 @@ def getProgramObjectives():
 @app.route("/department", methods=["POST"])
 def addDepartment():
     model = Model()
-    deptName = request.json.get("deptName")
-    deptCode = request.json.get("deptCode")
+    deptName = request.json.get("DeptName")
+    deptCode = request.json.get("DeptCode")
     result = model.insert_department(deptName, deptCode)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -105,10 +105,10 @@ def addDepartment():
 @app.route("/faculty", methods=["POST"])
 def addFaculty():
     model = Model()
-    name = request.json.get("name")
-    email = request.json.get("email")
-    deptID = request.json.get("deptID")
-    position = request.json.get("position")
+    name = request.json.get("Name")
+    email = request.json.get("Email")
+    deptID = request.json.get("DeptID")
+    position = request.json.get("Position")
     result = model.insert_faculty(name, email, deptID, position)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -117,10 +117,10 @@ def addFaculty():
 @app.route("/program", methods=["POST"])
 def addProgram():
     model = Model()
-    progName = request.json.get("progName")
-    deptID = request.json.get("deptID")
-    facultyLeadID = request.json.get("facultyLeadID")
-    facultyLeadEmail = request.json.get("facultyLeadEmail")
+    progName = request.json.get("ProgName")
+    deptID = request.json.get("DeptID")
+    facultyLeadID = request.json.get("FacultyLeadID")
+    facultyLeadEmail = request.json.get("FacultyLeadEmail")
     result = model.insert_program(progName, deptID, facultyLeadID, facultyLeadEmail)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -129,10 +129,10 @@ def addProgram():
 @app.route("/course", methods=["POST"])
 def addCourse():
     model = Model()
-    courseID = request.json.get("courseID")  # Updated to use CourseID directly
-    title = request.json.get("title")
-    description = request.json.get("description")
-    deptID = request.json.get("deptID")
+    courseID = request.json.get("CourseID")  # Updated to use CourseID directly
+    title = request.json.get("Title")
+    description = request.json.get("Description")
+    deptID = request.json.get("DeptID")
     result = model.insert_course(courseID, title, description, deptID)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -141,11 +141,11 @@ def addCourse():
 @app.route("/section", methods=["POST"])
 def addSection():
     model = Model()
-    courseID = request.json.get("courseID")
-    semester = request.json.get("semester")
-    year = request.json.get("year")
-    facultyLeadID = request.json.get("facultyLeadID")
-    enrollCount = request.json.get("enrollCount")
+    courseID = request.json.get("CourseID")
+    semester = request.json.get("Semester")
+    year = request.json.get("Year")
+    facultyLeadID = request.json.get("FacultyLeadID")
+    enrollCount = request.json.get("EnrollCount")
     result = model.insert_section(courseID, semester, year, facultyLeadID, enrollCount)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -154,9 +154,9 @@ def addSection():
 @app.route("/objective", methods=["POST"])
 def addObjective():
     model = Model()
-    objCode = request.json.get("objCode")
-    description = request.json.get("description")
-    deptID = request.json.get("deptID")
+    objCode = request.json.get("ObjCode")
+    description = request.json.get("Description")
+    deptID = request.json.get("DeptID")
     result = model.insert_objective(objCode, description, deptID)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -165,9 +165,9 @@ def addObjective():
 @app.route("/subobjective", methods=["POST"])
 def addSubobjective():
     model = Model()
-    subObjCode = request.json.get("subObjCode")
-    description = request.json.get("description")
-    parentObjID = request.json.get("parentObjID")
+    subObjCode = request.json.get("SubObjCode")
+    description = request.json.get("Description")
+    parentObjID = request.json.get("ParentObjID")
     result = model.insert_subobjective(subObjCode, description, parentObjID)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -176,8 +176,8 @@ def addSubobjective():
 @app.route("/courseobjective", methods=["POST"])
 def linkCourseObjective():
     model = Model()
-    courseID = request.json.get("courseID")
-    objID = request.json.get("objID")
+    courseID = request.json.get("CourseID")
+    objID = request.json.get("ObjID")
     result = model.link_course_to_objective(courseID, objID)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -186,12 +186,12 @@ def linkCourseObjective():
 @app.route("/evaluationresult", methods=["POST"])
 def addEvaluationResult():
     model = Model()
-    courseObjID = request.json.get("courseObjID")
-    secID = request.json.get("secID")
-    semester = request.json.get("semester")
-    year = request.json.get("year")
-    evalMethod = request.json.get("evalMethod")
-    studentsPassed = request.json.get("studentsPassed")
+    courseObjID = request.json.get("CourseObjID")
+    secID = request.json.get("SecID")
+    semester = request.json.get("Semester")
+    year = request.json.get("Year")
+    evalMethod = request.json.get("EvalMethod")
+    studentsPassed = request.json.get("StudentsPassed")
     result = model.insert_evaluation_result(courseObjID, secID, semester, year, evalMethod, studentsPassed)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -201,7 +201,7 @@ def addEvaluationResult():
 def linkCourseToProgram():
     model = Model()
     ProgID = request.json.get("ProgID")
-    courseID = request.json.get("courseID")
+    courseID = request.json.get("CourseID")
     result = model.link_course_to_program(ProgID, courseID)
     status_code = get_status_code(result)
     return jsonify(result), status_code
@@ -210,9 +210,9 @@ def linkCourseToProgram():
 @app.route("/assign_objective", methods=["POST"])
 def assignObjectiveToCourseProgram():
     model = Model()
-    courseID = request.json.get("courseID")
+    courseID = request.json.get("CourseID")
     ProgID = request.json.get("ProgID")
-    objID = request.json.get("objID")
+    objID = request.json.get("ObjID")
     result = model.assign_objective_to_course_program(courseID, ProgID, objID)
     status_code = get_status_code(result)
     return jsonify(result), status_code

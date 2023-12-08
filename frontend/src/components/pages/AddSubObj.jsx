@@ -1,30 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addSubObjective, getAllSubObjectives } from "../../api";
+import { addSubObjective } from "../../api";
 import { TextField } from "../common/TextField";
 import { Department, Faculty, Program, Section, Course, Objective, SubObjective, CourseObjective } from "../../models";
 
-export const AddObj = () => {
+export const AddSubObj = () => {
     const [ subobjectives, setSubObjectives ] = useState([]);
     const [ id, setId ] = useState("");
     const [ code, setCode ] = useState("");
     const [ description, setDescription ] = useState("");
     const [ parent, setParent ] = useState("");
+    const [ success, setSuccess ] = useState("");
 
 
     const handleSubmit = () => {
         addSubObjective(new SubObjective(id, code, description, parent)).then(x => {
-            getAllSubObjectives().then(x => setSubObjectives(x));
+            // getAllDepartments().then(x => setDepartments(x));
+            setSuccess("Successfully added");
+        }).catch(x => {
+            setSuccess("");
         })
     }
-
-    useEffect(() => {
-        getAllObjectives().then(x => setSubObjectives(x));
-    }, []);
-
-    useEffect(() => {
-        console.log(subobjectives)
-    }, [subobjectives])
 
     return <>
         <div>
@@ -39,25 +35,13 @@ export const AddObj = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    getAllSubObjectives(SubObjective)
+                    handleSubmit()
                 }}
             >
                 Add Sub-Objective
             </button>
         </form>
 
-        <ul>
-            {
-                subobjectives.map((subobjective, index) => {
-                    return <li key = { index }>{ subobjective[0] }
-                        <ul>
-                            <li>{ subobjective[1] }</li>
-                            <li>{ subobjective[2] }</li>
-                            <li>{ subobjective[3] }</li>
-                        </ul>
-                    </li>
-                })
-            }
-        </ul>
+        {success}
     </>
 };
