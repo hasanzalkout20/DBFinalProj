@@ -134,9 +134,7 @@ response = requests.get(f'{base_url}/program_courses_objectives', params={'progr
 print("Courses and Objectives for CS Masters Program:", response.json())
 
 # Test: Listing all objectives for a given program
-response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'CS Masters'})
-print("Objectives for CS Masters Program:", response.json())
-
-
+response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'Math PhD'})
+print("Objectives for Math PhD Program:", response.json())
 
 

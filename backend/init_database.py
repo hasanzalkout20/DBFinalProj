@@ -201,6 +201,6 @@ def create_tables():
 
 # Main execution
 if __name__ == "__main__":
-    drop_tables()    # uncomment to clear tables and data
+#    drop_tables()    # uncomment to clear tables and data
     create_database()
     create_tables()

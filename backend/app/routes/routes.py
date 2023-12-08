@@ -1,8 +1,6 @@
 from app import app
 from app.models.model import Model
 from flask import request, jsonify
-from flask_cors import cross_origin
-import sys
 
 # Utility function to check if the result contains an error message
 def is_error(result):
@@ -15,13 +13,6 @@ def get_status_code(result):
     if 'error' in result:
         return 500  # Internal Server Error
     return 201  # Created
-
-# Getters for all tables
-@app.route("/departments", methods=["GET"])
-def getDepartments():
-    model = Model()
-    departments = model.getAllDepartments()
-    return jsonify(departments)
 
 @app.route("/programs", methods=["GET"])
 def getDepartmentPrograms():
@@ -73,11 +64,9 @@ def getProgramObjectives():
 @app.route("/department", methods=["POST"])
 def addDepartment():
     model = Model()
-    print(request.json)
-    deptName = request.json.get("DeptName")
-    deptCode = request.json.get("DeptCode")
-    deptID = request.json.get("DeptID")
-    result = model.insert_department(deptID, deptName, deptCode)
+    deptName = request.json.get("deptName")
+    deptCode = request.json.get("deptCode")
+    result = model.insert_department(deptName, deptCode)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
