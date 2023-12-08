@@ -2,6 +2,7 @@ import requests
 
 base_url = 'http://127.0.0.1:8000'  # Adjust as needed
 
+
 # Sample Data for Testing Data Entry
 departments = [
     {"deptName": "Computer Science", "deptCode": "CSCI"},
@@ -19,13 +20,13 @@ programs = [
 ]
 
 courses = [
-    {"deptID": 1, "title": "Advanced Algorithms", "description": "Study of advanced algorithmic techniques."},
-    {"deptID": 2, "title": "Linear Algebra", "description": "In-depth look at linear algebra and its applications."}
+    {"deptID": 1, "courseID": "CSCI1100", "title": "Advanced Algorithms", "description": "Study of advanced algorithmic techniques."},
+    {"deptID": 2, "courseID": "MATH2200", "title": "Linear Algebra", "description": "In-depth look at linear algebra and its applications."}
 ]
 
 sections = [
-    {"courseID": 1, "semester": "Fall", "year": 2022, "facultyLeadID": 1, "enrollCount": 30},
-    {"courseID": 2, "semester": "Spring", "year": 2023, "facultyLeadID": 2, "enrollCount": 25}
+    {"courseID": "CSCI1100", "semester": "Fall", "year": 2022, "facultyLeadID": 1, "enrollCount": 30},
+    {"courseID": "MATH2200", "semester": "Spring", "year": 2023, "facultyLeadID": 2, "enrollCount": 25}
 ]
 
 objectives = [
@@ -38,25 +39,28 @@ subobjectives = [
     {"subObjCode": "SUBOBJ102.1", "description": "Matrix operations and applications", "parentObjID": 2}
 ]
 
+
+# Updated to use correct CourseID format
 course_objectives = [
-    {"courseID": 1, "objID": 1},
-    {"courseID": 2, "objID": 2}
+    {"courseID": "CSCI1100", "objID": 1},
+    {"courseID": "MATH2200", "objID": 2}
 ]
 
-evaluation_results = [
-    {"courseObjID": 1, "secID": 1, "semester": "Fall", "year": 2022, "evalMethod": "Exam", "studentsPassed": 28},
-    {"courseObjID": 2, "secID": 2, "semester": "Spring", "year": 2023, "evalMethod": "Project", "studentsPassed": 23}
-]
-
-# Additional sample data for linking courses to programs and assigning objectives
+# Dummy data for ProgramCourses and CourseProgramObjectives
 program_courses = [
-    {"ProgID": 1, "courseID": 1},
-    {"ProgID": 2, "courseID": 2}
+    {"ProgID": 1, "courseID": "CSCI1100"},
+    {"ProgID": 2, "courseID": "MATH2200"}
 ]
 
 course_program_objectives = [
-    {"courseID": 1, "ProgID": 1, "objID": 1},
-    {"courseID": 2, "ProgID": 2, "objID": 2}
+    {"courseID": "CSCI1100", "ProgID": 1, "objID": 1},
+    {"courseID": "MATH2200", "ProgID": 2, "objID": 2}
+]
+
+# Revised Evaluation Results Section (assuming courseObjID are auto-incremented and start from 1)
+evaluation_results = [
+    {"courseObjID": 1, "secID": 1, "semester": "Fall", "year": 2022, "evalMethod": "Exam", "studentsPassed": 28},
+    {"courseObjID": 2, "secID": 2, "semester": "Spring", "year": 2023, "evalMethod": "Project", "studentsPassed": 23}
 ]
 
 # POST Requests for Data Entry
@@ -132,6 +136,7 @@ print("Courses and Objectives for CS Masters Program:", response.json())
 # Test: Listing all objectives for a given program
 response = requests.get(f'{base_url}/program_objectives', params={'program_name': 'CS Masters'})
 print("Objectives for CS Masters Program:", response.json())
+
 
 
 

@@ -40,46 +40,41 @@ class Model:
         ''', (department_name,))
         return self.cursor.fetchall()
 
-    def getProgramCourses(self, title):
+    def getProgramCourses(self, program_name):
         self.cursor.execute('''
-            SELECT Course.*, CourseObjectives.*, SubObjectives.* FROM Course 
-            WHERE Title = %s 
-            JOIN CourseObjectives ON CourseObjectives.CourseID = Course.CourseID
-            JOIN Program ON Program.ProgramName = CourseObjectives.ProgramName
-            JOIN SubObjectives ON SubObjectives.SubObjCode = CourseObjectives.SubObjCode
-            WHERE ProgramName = %s 
-        ''', (title,))
-        programs = self.cursor.fetchall()
-        return programs
+            SELECT Course.*, CourseObjectives.*, SubObjectives.* 
+            FROM Course
+            JOIN CourseObjectives ON Course.CourseID = CourseObjectives.CourseID
+            JOIN ProgramCourses ON ProgramCourses.CourseID = Course.CourseID
+            JOIN Program ON Program.ProgID = ProgramCourses.ProgID
+            LEFT JOIN SubObjectives ON CourseObjectives.ObjID = SubObjectives.ParentObjID
+            WHERE Program.ProgName = %s
+        ''', (program_name,))
+        return self.cursor.fetchall()
 
-    def getProgramObjectives(self, program_name):
+
+    def getProgramObjectives(self, program_name):       
         self.cursor.execute('''
             SELECT Objectives.ObjCode, Objectives.Description
             FROM Objectives
             JOIN CourseObjectives ON Objectives.ObjID = CourseObjectives.ObjID
             JOIN Course ON Course.CourseID = CourseObjectives.CourseID
-            WHERE Course.DeptID = (SELECT DeptID FROM Program WHERE ProgName = %s)
+            JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
+            JOIN Program ON Program.ProgID = ProgramCourses.ProgID
+            WHERE Program.ProgName = %s
         ''', (program_name,))
         return self.cursor.fetchall()
 
-
-    def getEvaluationResultsAcademicYear(self, year):
+    def getEvaluationResultsByCourseName(self, course_name, semester, year):
         self.cursor.execute('''
-            SELECT ObjCode,
-            Students,
-            (100 * StudentsPassed / Students) AS PassPercentage
-            FROM (
-                SELECT *,
-                SUM(Section.EnrollCount) AS Students
-                FROM CourseObjectives 
-                JOIN Section ON Section.SecID = CourseObjectives.SecID
-                JOIN Objectives on Objectives.ObjCode = CourseObjectives.ObjCode
-                WHERE Year = %s
-                GROUP BY CourseObjectives.SecID
-            ) AS Objectives
-        ''', (year))
-        programs = self.cursor.fetchall()
-        return programs
+            SELECT ObjectiveEval.*
+            FROM ObjectiveEval
+            INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
+            INNER JOIN Course ON Section.CourseID = Course.CourseID
+            WHERE Course.Title = %s AND Section.Semester = %s AND Section.Year = %s
+        ''', (course_name, semester, year))
+        return self.cursor.fetchall()
+
 
     def getEvaluationResultsByCourseName(self, course_name, semester, year):
         self.cursor.execute('''
@@ -160,24 +155,22 @@ class Model:
             return {"error": str(e)}
     
     # Method to insert a new course
-    def insert_course(self, deptID, title, description):
+    def insert_course(self, courseID, title, description, deptID):
         try:
-            # check if course already exists
-            self.cursor.execute("SELECT CourseID FROM Course WHERE Title = %s", (title,))
+            self.cursor.execute("SELECT CourseID FROM Course WHERE CourseID = %s", (courseID,))
             if self.cursor.fetchone():
-                return {"message": "Course already exists"}
-            sql = "INSERT INTO Course (DeptID, Title, Description) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (deptID, title, description))
+                return {"message": "Course with this ID already exists"}
+
+            sql = "INSERT INTO Course (CourseID, DeptID, Title, Description) VALUES (%s, %s, %s, %s)"
+            self.cursor.execute(sql, (courseID, deptID, title, description))
             self.connection.commit()
             return {"message": "Course added successfully"}
         except mysql.connector.errors.IntegrityError as e:
-            return {"error": str(e)}    
-        
+            return {"error": str(e)}
 
     # Method to insert a new section
     def insert_section(self, courseID, semester, year, facultyLeadID, enrollCount):
         try:
-            #check if section already exists
             self.cursor.execute("SELECT SecID FROM Section WHERE CourseID = %s AND Semester = %s AND Year = %s", (courseID, semester, year))
             if self.cursor.fetchone():
                 return {"message": "Section already exists"}
@@ -219,7 +212,6 @@ class Model:
     # Method to link a course to an objective
     def link_course_to_objective(self, courseID, objID):
         try:
-            # check if course-objective pair already exists
             self.cursor.execute("SELECT CourseObjID FROM CourseObjectives WHERE CourseID = %s AND ObjID = %s", (courseID, objID))
             if self.cursor.fetchone():
                 return {"message": "Course-objective pair already exists"}
@@ -247,7 +239,6 @@ class Model:
     # Method to link a course to a program
     def link_course_to_program(self, ProgID, courseID):
         try:
-            # check if course-program pair already exists
             self.cursor.execute("SELECT ProgramCourseID FROM ProgramCourses WHERE ProgID = %s AND CourseID = %s", (ProgID, courseID))
             if self.cursor.fetchone():
                 return {"message": "Course-program pair already exists"}

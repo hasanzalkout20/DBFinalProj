@@ -8,7 +8,7 @@ def is_error(result):
 
 # Utility function to determine the HTTP status code based on the result
 def get_status_code(result):
-    if 'already exists' in result['message']:
+    if result.get('message', '').find('already exists') != -1:
         return 409  # Conflict
     if 'error' in result:
         return 500  # Internal Server Error
@@ -98,14 +98,15 @@ def addProgram():
 @app.route("/course", methods=["POST"])
 def addCourse():
     model = Model()
-    deptID = request.json.get("deptID")
+    courseID = request.json.get("courseID")  # Updated to use CourseID directly
     title = request.json.get("title")
     description = request.json.get("description")
-    result = model.insert_course(deptID, title, description)
+    deptID = request.json.get("deptID")
+    result = model.insert_course(courseID, title, description, deptID)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Section POST route with duplicate prevention and error handling
+# Updated POST route for sections
 @app.route("/section", methods=["POST"])
 def addSection():
     model = Model()
