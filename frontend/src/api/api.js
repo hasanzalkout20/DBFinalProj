@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // define api endpoint in the backend
-const baseEndpoint = "http://127.0.0.1:8000";
+const baseEndpoint = 'http://localhost:8000';
 
 export const getAllDepartments = () => new Promise((resolve, reject) => {
     // create apiConfig object with a property

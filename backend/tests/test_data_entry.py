@@ -1,66 +1,64 @@
 import requests
 
-base_url = 'http://127.0.0.1:8000'  # Adjust as needed
-
+base_url = 'http://localhost:8000'  # Adjust as needed
 
 # Sample Data for Testing Data Entry
 departments = [
-    {"deptName": "Computer Science", "deptCode": "CSCI"},
-    {"deptName": "Mathematics", "deptCode": "MATH"}
+    {"DeptName": "Computer Science", "DeptCode": "CSCI"},  # Changed from "deptCode" to "DeptCode"
+    {"DeptName": "Mathematics", "DeptCode": "MATH"}        # Changed from "deptCode" to "DeptCode"
 ]
 
 faculty = [
-    {"name": "John Doe", "email": "jdoe@csci.edu", "deptID": 1, "position": "Associate Professor"},
-    {"name": "Jane Smith", "email": "jsmith@math.edu", "deptID": 2, "position": "Professor"}
+    {"Name": "John Doe", "Email": "jdoe@csci.edu", "DeptID": 1, "Position": "Associate Professor"},  # Changed keys to start with uppercase
+    {"Name": "Jane Smith", "Email": "jsmith@math.edu", "DeptID": 2, "Position": "Professor"}          # Changed keys to start with uppercase
 ]
 
 programs = [
-    {"progName": "CS Masters", "deptID": 1, "facultyLeadID": 1, "facultyLeadEmail": "jdoe@csci.edu"},
-    {"progName": "Math PhD", "deptID": 2, "facultyLeadID": 2, "facultyLeadEmail": "jsmith@math.edu"}
+    {"ProgName": "CS Masters", "DeptID": 1, "FacultyLeadID": 1, "FacultyLeadEmail": "jdoe@csci.edu"},  # Changed keys to start with uppercase
+    {"ProgName": "Math PhD", "DeptID": 2, "FacultyLeadID": 2, "FacultyLeadEmail": "jsmith@math.edu"}   # Changed keys to start with uppercase
 ]
 
 courses = [
-    {"deptID": 1, "courseID": "CSCI1100", "title": "Advanced Algorithms", "description": "Study of advanced algorithmic techniques."},
-    {"deptID": 2, "courseID": "MATH2200", "title": "Linear Algebra", "description": "In-depth look at linear algebra and its applications."}
+    {"DeptID": 1, "CourseID": "CSCI1100", "Title": "Advanced Algorithms", "Description": "Study of advanced algorithmic techniques."},  # Changed keys to start with uppercase
+    {"DeptID": 2, "CourseID": "MATH2200", "Title": "Linear Algebra", "Description": "In-depth look at linear algebra and its applications."}  # Changed keys to start with uppercase
 ]
 
 sections = [
-    {"courseID": "CSCI1100", "semester": "Fall", "year": 2022, "facultyLeadID": 1, "enrollCount": 30},
-    {"courseID": "MATH2200", "semester": "Spring", "year": 2023, "facultyLeadID": 2, "enrollCount": 25}
+    {"CourseID": "CSCI1100", "Semester": "Fall", "Year": 2022, "FacultyLeadID": 1, "EnrollCount": 30},  # Changed keys to start with uppercase
+    {"CourseID": "MATH2200", "Semester": "Spring", "Year": 2023, "FacultyLeadID": 2, "EnrollCount": 25}   # Changed keys to start with uppercase
 ]
 
 objectives = [
-    {"objCode": "OBJ101", "description": "Learn advanced algorithms", "deptID": 1},
-    {"objCode": "OBJ102", "description": "Understand linear algebra applications", "deptID": 2}
+    {"ObjCode": "OBJ101", "Description": "Learn advanced algorithms", "DeptID": 1},  # Changed keys to start with uppercase
+    {"ObjCode": "OBJ102", "Description": "Understand linear algebra applications", "DeptID": 2}  # Changed keys to start with uppercase
 ]
 
 subobjectives = [
-    {"subObjCode": "SUBOBJ101.1", "description": "Implement graph algorithms", "parentObjID": 1},
-    {"subObjCode": "SUBOBJ102.1", "description": "Matrix operations and applications", "parentObjID": 2}
+    {"SubObjCode": "SUBOBJ101.1", "Description": "Implement graph algorithms", "ParentObjID": 1},  # Changed keys to start with uppercase
+    {"SubObjCode": "SUBOBJ102.1", "Description": "Matrix operations and applications", "ParentObjID": 2}  # Changed keys to start with uppercase
 ]
-
 
 # Updated to use correct CourseID format
 course_objectives = [
-    {"courseID": "CSCI1100", "objID": 1},
-    {"courseID": "MATH2200", "objID": 2}
+    {"CourseID": "CSCI1100", "ObjID": 1},  # Changed keys to start with uppercase
+    {"CourseID": "MATH2200", "ObjID": 2}   # Changed keys to start with uppercase
 ]
 
 # Dummy data for ProgramCourses and CourseProgramObjectives
 program_courses = [
-    {"ProgID": 1, "courseID": "CSCI1100"},
-    {"ProgID": 2, "courseID": "MATH2200"}
+    {"ProgID": 1, "CourseID": "CSCI1100"},  # Changed keys to start with uppercase
+    {"ProgID": 2, "CourseID": "MATH2200"}   # Changed keys to start with uppercase
 ]
 
 course_program_objectives = [
-    {"courseID": "CSCI1100", "ProgID": 1, "objID": 1},
-    {"courseID": "MATH2200", "ProgID": 2, "objID": 2}
+    {"CourseID": "CSCI1100", "ProgID": 1, "ObjID": 1},  # Changed keys to start with uppercase
+    {"CourseID": "MATH2200", "ProgID": 2, "ObjID": 2}   # Changed keys to start with uppercase
 ]
 
 # Revised Evaluation Results Section (assuming courseObjID are auto-incremented and start from 1)
 evaluation_results = [
-    {"courseObjID": 1, "secID": 1, "semester": "Fall", "year": 2022, "evalMethod": "Exam", "studentsPassed": 28},
-    {"courseObjID": 2, "secID": 2, "semester": "Spring", "year": 2023, "evalMethod": "Project", "studentsPassed": 23}
+    {"CourseObjID": 1, "SecID": 1, "Semester": "Fall", "Year": 2022, "EvalMethod": "Exam", "StudentsPassed": 28},  # Changed keys to start with uppercase
+    {"CourseObjID": 2, "SecID": 2, "Semester": "Spring", "Year": 2023, "EvalMethod": "Project", "StudentsPassed": 23}  # Changed keys to start with uppercase
 ]
 
 # POST Requests for Data Entry
@@ -71,7 +69,7 @@ for fac in faculty:
     requests.post(f'{base_url}/faculty', json=fac)
 
 for prog in programs:
-    requests.post(f'{base_url}/program', json=prog)
+    requests.post(f'{base_url}/programs', json=prog)
 
 for course in courses:
     requests.post(f'{base_url}/course', json=course)
@@ -99,29 +97,27 @@ for cpo in course_program_objectives:
 
 # GET Requests for Data Querying
 dept_programs = requests.get(f'{base_url}/programs', params={'department_name': 'Mathematics'}).json()
+# print programs
+print("Department Programs:", dept_programs)
 dept_faculty = requests.get(f'{base_url}/faculty', params={'department_name': 'Computer Science'}).json()
 # eval_results = requests.get(f'{base_url}/evaluation', params={'course_name': 'Advanced Algorithms', 'semester': 'Fall', 'year': 2022}).json()
 
-# Displaying the fetched data
+# # Displaying the fetched data
 print("Department Programs:", dept_programs)
 print("Department Faculty:", dept_faculty)
 # print("Evaluation Results:", eval_results)
 
-# Additional GET Requests for Extended Functionality
-academic_year_results = requests.get(f'{base_url}/evaluation_year', params={'year': '2022'}).json()
-print("Academic Year Evaluation Results:", academic_year_results)
+# # Additional GET Requests to Test Querying Functionalities
 
-# Additional GET Requests to Test Querying Functionalities
-
-# Test: Listing all programs for a given department
+# # Test: Listing all programs for a given department
 response = requests.get(f'{base_url}/programs', params={'department_name': 'Computer Science'})
 print("Programs in Computer Science Department:", response.json())
 
-# Test: Listing all faculty in a given department
+# # Test: Listing all faculty in a given department
 response = requests.get(f'{base_url}/faculty', params={'department_name': 'Computer Science'})
 print("Faculty in Computer Science Department:", response.json())
 
-# # Test: Listing evaluation results for each section of a course in a given semester and program
+# # # Test: Listing evaluation results for each section of a course in a given semester and program
 # response = requests.get(f'{base_url}/evaluation', params={'course_name': 'Advanced Algorithms', 'semester': 'Fall', 'year': 2022})
 # print("Evaluation Results for Advanced Algorithms in Fall 2022:", response.json())
 
