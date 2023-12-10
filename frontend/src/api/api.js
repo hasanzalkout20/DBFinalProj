@@ -10,13 +10,13 @@ export const getAllDepartments = () => new Promise((resolve, reject) => {
     };
 
     // log endpoint to the console
-    console.log(`${ baseEndpoint }/programs`);
+    console.log(`${ baseEndpoint }/program`);
 
     // log apiConfig object to the console
     console.log(apiConfig);
 
     // use axios to make a get request 
-    axios.get(`${ baseEndpoint }/departments`, apiConfig)
+    axios.get(`${ baseEndpoint }/department`, apiConfig)
         // if request is success, resolve Promise iwth data received from request
         .then(x => resolve(x.data))
 
@@ -38,13 +38,13 @@ export const getDepartmentPrograms = (department_name) => new Promise((resolve, 
     };
 
     // log endpoint to the console
-    console.log(`${ baseEndpoint }/programs`);
+    console.log(`${ baseEndpoint }/program`);
 
     // log apiConfig object to the console
     console.log(apiConfig);
 
     // use axios to make a get request 
-    axios.get(`${ baseEndpoint }/programs`, apiConfig)
+    axios.get(`${ baseEndpoint }/program`, apiConfig)
         // if request is success, resolve Promise iwth data received from request
         .then(x => resolve(x.data))
 

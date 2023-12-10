@@ -14,7 +14,7 @@ def get_status_code(result):
         return 500  # Internal Server Error
     return 201  # Created
 
-@app.route("/programs", methods=["GET"])
+@app.route("/program", methods=["GET"])
 def getDepartmentPrograms():
     model = Model()
     department_name = request.args.get("department_name")
