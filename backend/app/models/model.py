@@ -75,14 +75,16 @@ class Model:
             return {"evaluation_results": results}
         except Error as e:
             return {"error": str(e)}
-    
+
     def get_evaluation_results_by_academic_year(self, startYear, endYear):
         try:
             startYear = int(startYear)
             endYear = int(endYear)
-
+            
             self.cursor.execute("""
-                SELECT ObjectiveEval.*, Objectives.Description AS ObjDesc, SubObjectives.Description AS SubObjDesc
+                SELECT ObjectiveEval.*, Objectives.ObjCode, Objectives.Description AS ObjDesc, 
+                    SubObjectives.SubObjCode, SubObjectives.Description AS SubObjDesc, 
+                    Section.EnrollCount
                 FROM ObjectiveEval
                 JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
                 JOIN Objectives ON CourseObjectives.ObjCode = Objectives.ObjCode
@@ -91,25 +93,20 @@ class Model:
                 WHERE ObjectiveEval.Year >= %s AND ObjectiveEval.Year <= %s
                 """, (startYear, endYear))
             results = self.cursor.fetchall()
-            
-            # Print column names and their indices
-            column_names = [desc[0] for desc in self.cursor.description]
-            for index, col_name in enumerate(column_names):
-                print(f"Index: {index}, Column: {col_name}")
 
             if not results:
                 return {"message": "No data found"}
-
+            
             # Aggregate results
             aggregated_results = {}
             for result in results:
-                objCode = result[5]  # Adjust the index as per your SELECT statement
-                subObjCode = result[6] if result[6] else 'N/A'  # Adjust the index as per your SELECT statement
-                enrollCount = int(result[-4]) if result[-4] is not None else 0
-                studentsPassed = int(result[-3]) if result[-3] is not None else 0
+                # Adjust the indices based on the tuple length
+                objCode = result[7]  # Index for 'Objectives.ObjCode'
+                subObjCode = result[9] if result[9] else 'N/A'  # Index for 'SubObjectives.SubObjCode'
+                enrollCount = int(result[11])  # Index for 'Section.EnrollCount'
+                studentsPassed = int(result[6])  # Index for 'ObjectiveEval.StudentsPassed'
 
-                # Convert tuple to string for JSON serialization
-                key = f"{objCode}_{subObjCode}"  # Creating a string key
+                key = f"{objCode}_{subObjCode}"
                 if key not in aggregated_results:
                     aggregated_results[key] = {'total_students': 0, 'students_passed': 0}
                 aggregated_results[key]['total_students'] += enrollCount
