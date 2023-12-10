@@ -15,8 +15,8 @@ faculties = [
 ]
 
 programs = [
-    {"ProgramName": "Computer Science", "DeptCode": "CS", "FacultyLeadName": "John Doe", "FacultyLeadID": 1, "FacultyLeadEmail": "john@university.edu"},
-    {"ProgramName": "Electrical Engineering", "DeptCode": "EE", "FacultyLeadName": "Jane Smith", "FacultyLeadID": 2, "FacultyLeadEmail": "jane@university.edu"}
+    {"ProgramName": "CS B.S.", "DeptCode": "CS", "FacultyLeadName": "John Doe", "FacultyLeadID": 1, "FacultyLeadEmail": "john@university.edu"},
+    {"ProgramName": "EE B.S.", "DeptCode": "EE", "FacultyLeadName": "Jane Smith", "FacultyLeadID": 2, "FacultyLeadEmail": "jane@university.edu"}
 ]
 
 courses = [
@@ -30,8 +30,8 @@ sections = [
 ]
 
 objectives = [
-    {"ObjCode": "CSOBJ1", "Description": "Understand basic CS concepts", "ProgramName": "Computer Science"},
-    {"ObjCode": "EEOBJ1", "Description": "Understand basic EE concepts", "ProgramName": "Electrical Engineering"}
+    {"ObjCode": "CSOBJ1", "Description": "Understand basic CS concepts", "ProgramName": "CS B.S."},
+    {"ObjCode": "EEOBJ1", "Description": "Understand basic EE concepts", "ProgramName": "EE B.S."}
 ]
 
 subobjectives = [
@@ -130,7 +130,7 @@ def test_program_courses_and_objectives():
 def test_evaluation_results_by_semester_and_program():
     # Example: Testing for the Fall semester of 2023 for the Computer Science program
     print("Evaluation Results for Fall 2023, Computer Science:")
-    print(send_get_request("program/evaluation_results", params={"semester": "Fall", "year": "2023", "programName": "Computer Science"}))
+    print(send_get_request("program/evaluation_results", params={"semester": "Fall", "year": "2023", "programName": "CS B.S."}))
 
 def test_evaluation_results_by_academic_year():
     # Example: Testing for the academic year 2023-2024
