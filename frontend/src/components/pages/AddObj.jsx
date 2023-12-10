@@ -6,15 +6,14 @@ import { Department, Faculty, Program, Section, Course, Objective, SubObjective,
 
 export const AddObj = () => {
     const [ objectives, setObjectives ] = useState([]);
-    const [ id, setId ] = useState("");
     const [ code, setCode ] = useState("");
     const [ description, setDescription ] = useState("");
-    const [ deptID, setDeptID ] = useState("");
+    const [ programName, setProgramName ] = useState("");
     const [ success, setSuccess ] = useState("");
 
 
     const handleSubmit = () => {
-        addObjective(new Objective(id, code, description, deptID)).then(x => {
+        addObjective(new Objective(code, description, programName)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -28,10 +27,9 @@ export const AddObj = () => {
         </div>
         
         <form name = "programs" id = "programs">
-            <TextField label = "Objective ID: " value = { id } setValue={setId}/>
             <TextField label = "Objective Code: " value = { code } setValue={setCode}/>
             <TextField label = "Description: " value = { description } setValue={setDescription}/>
-            <TextField label = "Department ID:" value = { deptID } setValue={setDeptID}/>
+            <TextField label = "Program Name:" value = { programName } setValue={setProgramName}/>
             <button
                 type = "button"
                 onClick = {() => {

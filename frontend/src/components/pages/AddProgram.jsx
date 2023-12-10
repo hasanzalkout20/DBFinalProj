@@ -6,15 +6,16 @@ import { Department, Faculty, Program, Section, Course, Objective, SubObjective,
 
 export const AddProgram = () => {
     const [ programs, setPrograms ] = useState([]);
-    const [ id, setID ] = useState("");
+    // const [ id, setID ] = useState("");
     const [ name, setName ] = useState("");
-    const [ deptID, setDeptID ] = useState("");
+    const [ deptCode, setDeptCode ] = useState("");
+    const [ facultyLeadName, setFacultyLeadName ] = useState("");
     const [ facultyLeadID, setFacultyLeadID ] = useState("");
     const [ facultyLeadEmail, setFacultyLeadEmail ] = useState("");
     const [ success, setSuccess ] = useState("");
 
     const handleSubmit = () => {
-        addProgram(new Program(id, name, deptID, facultyLeadID, facultyLeadEmail)).then(x => {
+        addProgram(new Program(name, deptCode, facultyLeadName, facultyLeadID, facultyLeadEmail)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -29,9 +30,9 @@ export const AddProgram = () => {
         </div>
         
         <form name = "programs" id = "programs">
-        <TextField label = "Program ID: " value = { id } setValue={ setID }/>
             <TextField label = "Program Name: " value = { name } setValue={setName}/>
-            <TextField label = "Department ID: " value = { deptID } setValue={setDeptID}/>
+            <TextField label = "Department Code: " value = { deptCode } setValue={setDeptID}/>
+            <TextField label = "Faculty Lead Name: " value = { facultyLeadName } setValue={setFacultyLeadName}/>
             <TextField label = "Faculty Lead ID: " value = { facultyLeadID } setValue={setFacultyLeadID}/>
             <TextField label = "Faculty Lead Email: " value = { facultyLeadEmail } setValue={setFacultyLeadEmail}/>
             <button

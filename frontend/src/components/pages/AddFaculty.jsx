@@ -9,20 +9,20 @@ export const AddFaculty = () => {
     const [ id, setId ] = useState("");
     const [ name, setName ] = useState("");
     const [ email, setEmail ] = useState("");
-    const [ deptID, setDeptId ] = useState("");
+    // changed: const [ deptID, setDeptId ] = useState("");
+    const [ deptCode, setDeptCode ] = useState("");
     const [ position, setPosition ] = useState("");
     const [ success, setSuccess ] = useState("");
     
 
     const handleSubmit = () => {
-        addFaculty(new Faculty(id, name, email, deptID, position)).then(x => {
+        addFaculty(new Faculty(id, name, email, deptCode, position)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
             setSuccess("");
         })
     }
-
  
 
     return <>
@@ -34,7 +34,7 @@ export const AddFaculty = () => {
             <TextField label = "Faculty ID: " value = { id } setValue={setId}/>
             <TextField label = "Name: " value = { name } setValue={setName}/>
             <TextField label = "Email: " value = { email } setValue={setEmail}/>
-            <TextField label = "Department ID: " value = { deptID } setValue={setDeptId}/>
+            <TextField label = "Department Code: " value = { deptCode } setValue={setDeptCode}/>
             <TextField label = "Position: " value = { position } setValue={setPosition}/>
             <button
                 type = "button"

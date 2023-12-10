@@ -1,10 +1,9 @@
 export class Program {
-    constructor(ProgID, ProgName, DeptID, FacultyLeadID, FacultyLeadEmail) {
-        this.ProgID = ProgID;
-        this.ProgName = ProgName;
-        this.DeptID = DeptID;
+    constructor(ProgramName, DeptCode, FacultyLeadName, FacultyLeadID, FacultyLeadEmail) {
+        this.ProgramName = ProgramName;
+        this.DeptCode = DeptCode;
+        this.FacultyLeadName = FacultyLeadName;
         this.FacultyLeadID = FacultyLeadID;
         this.FacultyLeadEmail = FacultyLeadEmail;
-
     }
 }

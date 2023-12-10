@@ -6,15 +6,14 @@ import { Department, Faculty, Program, Section, Course, Objective, SubObjective,
 
 export const AddSubObj = () => {
     const [ subobjectives, setSubObjectives ] = useState([]);
-    const [ id, setId ] = useState("");
-    const [ code, setCode ] = useState("");
+    const [ subObjCode, setSubObjCode ] = useState("");
     const [ description, setDescription ] = useState("");
-    const [ parent, setParent ] = useState("");
+    const [ objCode, setObjCode ] = useState("");
     const [ success, setSuccess ] = useState("");
 
 
     const handleSubmit = () => {
-        addSubObjective(new SubObjective(id, code, description, parent)).then(x => {
+        addSubObjective(new SubObjective(subObjCode, description, objCode)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -28,10 +27,9 @@ export const AddSubObj = () => {
         </div>
         
         <form name = "programs" id = "programs">
-            <TextField label = "Sub-Objective ID: " value = { id } setValue={setId}/>
-            <TextField label = "Sub-Objective Code: " value = { code } setValue={setCode}/>
+            <TextField label = "Sub-Objective Code: " value = { subObjCode } setValue={setSubObjCode}/>
             <TextField label = "Description: " value = { description } setValue={setDescription}/>
-            <TextField label = "Parent Objective ID: " value = { parent } setValue={setParent}/>
+            <TextField label = "Objective Code: " value = { objCode } setValue={setObjCode}/>
             <button
                 type = "button"
                 onClick = {() => {

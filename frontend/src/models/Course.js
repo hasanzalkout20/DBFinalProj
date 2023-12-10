@@ -1,7 +1,7 @@
 export class Course {
     constructor(CourseID, DeptID, Title, Description) {
         this.CourseID = CourseID;
-        this.DeptID = DeptID;
+        this.DeptCode = DeptCode;
         this.Title = Title
         this.Description = Description
     }

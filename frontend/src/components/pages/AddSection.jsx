@@ -6,7 +6,7 @@ import { Department, Faculty, Program, Section, Course, Objective, SubObjective,
 
 export const AddSection = () => {
     const [ sections, setSections ] = useState([]);
-    const [ secId, setSecId ] = useState("");
+    const [ sectionId, setSectionId ] = useState("");
     const [ courseID, setCourseID ] = useState("");
     const [ semester, setSemester ] = useState("");
     const [ year, setYear ] = useState("");
@@ -16,7 +16,7 @@ export const AddSection = () => {
 
 
     const handleSubmit = () => {
-        addSection(new Section(secId, courseID, semester, year, facultyLeadID, enrollCount)).then(x => {
+        addSection(new Section(sectionId, courseID, semester, year, facultyLeadID, enrollCount)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -32,7 +32,7 @@ export const AddSection = () => {
         </div>
         
         <form name = "programs" id = "programs">
-            <TextField label = "Section ID: " value = { secId } setValue={setSecId}/>            
+            <TextField label = "Section ID: " value = { sectionId } setValue={setSectionId}/>            
             <TextField label = "Course ID: " value = { courseID } setValue={setCourseID}/>
             <TextField label = "Semester: " value = { semester } setValue={setSemester}/>
             <TextField label = "Year: " value = { year } setValue={setYear}/>

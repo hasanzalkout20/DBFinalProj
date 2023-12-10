@@ -1,8 +1,7 @@
 export class Objective {
-    constructor(ObjID, ObjCode, Description, DeptID) {
-        this.ObjID = ObjID;
-        this.ObjCode = ObjCode;
+    constructor(ObjCode, Description, ProgramName) {
+        this.ObjCode = ObjID;
         this.Description = Description;
-        this.DeptID = DeptID;
+        this.ProgramName = ProgramName;
     }
 }

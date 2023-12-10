@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addCourse, getAllCourses } from "../../api";  //??
+import { addCourse, getAllCourses } from "../../api";
 import { TextField } from "../common/TextField";
 import { Department, Faculty, Program, Section, Course, Objective, SubObjective, CourseObjective } from "../../models";
 
 export const AddCourse = () => {
     const [ courses, setCourses ] = useState([]);
     const [ id, setId ] = useState("");
-    const [ deptID, setDeptID ] = useState("");
+    const [ deptCode, setDeptCode ] = useState("");
     const [ title, setTitle ] = useState("");
     const [ description, setDescription] = useState("");
     const [ success, setSuccess ] = useState("");
 
     const handleSubmit = () => {
-        addCourse(new Course(id, deptID, title, description)).then(x => {
+        addCourse(new Course(id, deptCode, title, description)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -30,7 +30,7 @@ export const AddCourse = () => {
         
         <form name = "programs" id = "programs">
             <TextField label = "Course ID: " value = { id } setValue={setId}/>
-            <TextField label = "Department ID: " value = { deptID } setValue={setDeptID}/>
+            <TextField label = "Department Code: " value = { deptCode } setValue={setDeptCode}/>
             <TextField label = "Title: " value = { title } setValue={setTitle}/>
             <TextField label = "Description: " value = { description } setValue={setDescription}/>
             <button
@@ -56,7 +56,6 @@ export const AddCourse = () => {
                 })
             }
         </ul> */}
-
 
         { success }
     </>

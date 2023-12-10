@@ -6,13 +6,13 @@ import { Department, Faculty, Program, Section, Course, Objective, SubObjective,
 
 export const AddDept = () => {
     // const [ departments, setDepartments ] = useState([]);
-    const [ id, setId ] = useState("");
+    // const [ id, setId ] = useState("");
     const [ name, setName ] = useState("");
     const [ code, setCode ] = useState("");
     const [ success, setSuccess ] = useState("");
 
     const handleSubmit = () => {
-        addDepartment(new Department(id, name, code)).then(x => {
+        addDepartment(new Department(name, code)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
         }).catch(x => {
@@ -30,7 +30,6 @@ export const AddDept = () => {
         </div>
         
         <form name = "programs" id = "programs">
-            <TextField label = "Department ID: " value = { id } setValue={setId}/>
             <TextField label = "Department Name: " value = { name } setValue={setName}/>
             <TextField label = "Department Code: " value = { code } setValue={setCode}/>
             <button
@@ -47,7 +46,6 @@ export const AddDept = () => {
                     return <li key = { index }>{ department[0] }
                         <ul>
                             <li>{ department[1] }</li>
-                            <li>{ department[2] }</li>
                         </ul>
                     </li>
                 })
