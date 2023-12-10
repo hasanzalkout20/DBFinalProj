@@ -258,18 +258,19 @@ class Model:
         except Error as e:
             return {"error": str(e)}
 
-    # Method to enter evaluation results for a section
-    def insert_evaluation_result(self, objEvalID, courseObjID, sectionID, evalMethod, studentsPassed):
+    # Method to enter evaluation results for a course objective
+    def insert_evaluation_result(self, courseObjID, sectionID, evalMethod, semester, year, studentsPassed):
         try:
-            self.cursor.execute("SELECT ObjEvalID FROM ObjectiveEval WHERE ObjEvalID = %s", (objEvalID,))
+            self.cursor.execute("SELECT ObjEvalID FROM ObjectiveEval WHERE CourseObjID = %s AND SectionID = %s AND EvalMethod = %s AND Semester = %s AND Year = %s", (courseObjID, sectionID, evalMethod, semester, year))
             if self.cursor.fetchone():
-                return {"message": "Evaluation result ID already exists"}
-            sql = "INSERT INTO ObjectiveEval (ObjEvalID, CourseObjID, SectionID, EvalMethod, StudentsPassed) VALUES (%s, %s, %s, %s, %s)"
-            self.cursor.execute(sql, (objEvalID, courseObjID, sectionID, evalMethod, studentsPassed))
+                return {"message": "Evaluation result already exists"}
+            sql = "INSERT INTO ObjectiveEval (CourseObjID, SectionID, EvalMethod, Semester, Year, StudentsPassed) VALUES (%s, %s, %s, %s, %s, %s)"
+            self.cursor.execute(sql, (courseObjID, sectionID, evalMethod, semester, year, studentsPassed))
             self.connection.commit()
             return {"message": "Evaluation result added successfully"}
         except Error as e:
             return {"error": str(e)}
+
 
 
 

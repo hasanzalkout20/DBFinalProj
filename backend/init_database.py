@@ -150,6 +150,8 @@ def create_tables():
                     CourseObjID INT NOT NULL,
                     SectionID VARCHAR(20) NOT NULL,
                     EvalMethod ENUM('Exam', 'Homework', 'Project') NOT NULL,
+                    Semester ENUM('Fall', 'Spring', 'Summer') NOT NULL,
+                    Year INT NOT NULL,
                     StudentsPassed INT NOT NULL,
                     FOREIGN KEY (CourseObjID) REFERENCES CourseObjectives(CourseObjID),
                     FOREIGN KEY (SectionID) REFERENCES Section(SectionID)

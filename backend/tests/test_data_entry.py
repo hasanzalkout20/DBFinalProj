@@ -44,8 +44,12 @@ course_objectives = [
 ]
 
 evaluation_results = [
-    {"ObjEvalID": 1, "CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Exam", "StudentsPassed": 28},
-    {"ObjEvalID": 2, "CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Project", "StudentsPassed": 23}
+    {"CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Exam", "Semester": "Fall", "Year": 2023, "StudentsPassed": 25},
+    {"CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Homework", "Semester": "Fall", "Year": 2023, "StudentsPassed": 30},
+    {"CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Project", "Semester": "Fall", "Year": 2023, "StudentsPassed": 20},
+    {"CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Exam", "Semester": "Spring", "Year": 2023, "StudentsPassed": 20},
+    {"CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Homework", "Semester": "Spring", "Year": 2023, "StudentsPassed": 25},
+    {"CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Project", "Semester": "Spring", "Year": 2023, "StudentsPassed": 15}
 ]
 
 # Helper function to send POST requests
@@ -89,7 +93,7 @@ def test_data_entry():
 
     # Add evaluation results
     for evaluation_result in evaluation_results:
-        print(send_post_request("evaluationresult", evaluation_result))
+        print(send_post_request("evaluation", evaluation_result))
         
 if __name__ == "__main__":
     test_data_entry()
