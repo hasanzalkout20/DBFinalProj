@@ -1,4 +1,5 @@
 import requests
+from json.decoder import JSONDecodeError
 
 base_url = 'http://localhost:8000'  # Adjust as needed
 
