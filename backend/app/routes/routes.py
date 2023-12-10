@@ -91,129 +91,102 @@ def getProgramObjectives():
 
 # POST routes for adding data to the database
 
-# Department POST route with duplicate prevention and error handling
 @app.route("/department", methods=["POST"])
-def addDepartment():
+def add_department():
     model = Model()
-    deptName = request.json.get("DeptName")
     deptCode = request.json.get("DeptCode")
-    result = model.insert_department(deptName, deptCode)
+    deptName = request.json.get("DeptName")
+    result = model.insert_department(deptCode, deptName)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Faculty POST route with duplicate prevention and error handling
 @app.route("/faculty", methods=["POST"])
-def addFaculty():
+def add_faculty():
     model = Model()
+    facultyID = request.json.get("FacultyID")
     name = request.json.get("Name")
     email = request.json.get("Email")
-    deptID = request.json.get("DeptID")
+    deptCode = request.json.get("DeptCode")
     position = request.json.get("Position")
-    result = model.insert_faculty(name, email, deptID, position)
+    result = model.insert_faculty(facultyID, name, email, deptCode, position)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Program POST route with duplicate prevention and error handling
 @app.route("/program", methods=["POST"])
-def addProgram():
+def add_program():
     model = Model()
-    progName = request.json.get("ProgName")
-    deptID = request.json.get("DeptID")
+    programName = request.json.get("ProgramName")
+    deptCode = request.json.get("DeptCode")
+    facultyLeadName = request.json.get("FacultyLeadName")
     facultyLeadID = request.json.get("FacultyLeadID")
     facultyLeadEmail = request.json.get("FacultyLeadEmail")
-    result = model.insert_program(progName, deptID, facultyLeadID, facultyLeadEmail)
+    result = model.insert_program(programName, deptCode, facultyLeadName, facultyLeadID, facultyLeadEmail)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Course POST route with duplicate prevention and error handling
 @app.route("/course", methods=["POST"])
-def addCourse():
+def add_course():
     model = Model()
-    courseID = request.json.get("CourseID")  # Updated to use CourseID directly
+    courseID = request.json.get("CourseID")
+    deptCode = request.json.get("DeptCode")
     title = request.json.get("Title")
     description = request.json.get("Description")
-    deptID = request.json.get("DeptID")
-    result = model.insert_course(courseID, title, description, deptID)
+    result = model.insert_course(courseID, deptCode, title, description)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Updated POST route for sections
 @app.route("/section", methods=["POST"])
-def addSection():
+def add_section():
     model = Model()
+    sectionID = request.json.get("SectionID")
     courseID = request.json.get("CourseID")
     semester = request.json.get("Semester")
     year = request.json.get("Year")
     facultyLeadID = request.json.get("FacultyLeadID")
     enrollCount = request.json.get("EnrollCount")
-    result = model.insert_section(courseID, semester, year, facultyLeadID, enrollCount)
+    result = model.insert_section(sectionID, courseID, semester, year, facultyLeadID, enrollCount)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Objective POST route with duplicate prevention and error handling
 @app.route("/objective", methods=["POST"])
-def addObjective():
+def add_objective():
     model = Model()
     objCode = request.json.get("ObjCode")
     description = request.json.get("Description")
-    deptID = request.json.get("DeptID")
-    result = model.insert_objective(objCode, description, deptID)
+    programName = request.json.get("ProgramName")
+    result = model.insert_objective(objCode, description, programName)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# Subobjective POST route with duplicate prevention and error handling
 @app.route("/subobjective", methods=["POST"])
-def addSubobjective():
+def add_subobjective():
     model = Model()
     subObjCode = request.json.get("SubObjCode")
     description = request.json.get("Description")
-    parentObjID = request.json.get("ParentObjID")
-    result = model.insert_subobjective(subObjCode, description, parentObjID)
+    objCode = request.json.get("ObjCode")
+    result = model.insert_subobjective(subObjCode, description, objCode)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# CourseObjective POST route with duplicate prevention and error handling
 @app.route("/courseobjective", methods=["POST"])
-def linkCourseObjective():
+def link_course_to_objective():
     model = Model()
     courseID = request.json.get("CourseID")
-    objID = request.json.get("ObjID")
-    result = model.link_course_to_objective(courseID, objID)
+    objCode = request.json.get("ObjCode")
+    subObjCode = request.json.get("SubObjCode")
+    result = model.link_course_to_objective(courseID, objCode, subObjCode)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
-# EvaluationResult POST route with duplicate prevention and error handling
 @app.route("/evaluationresult", methods=["POST"])
-def addEvaluationResult():
+def add_evaluation_result():
     model = Model()
+    objEvalID = request.json.get("ObjEvalID")
     courseObjID = request.json.get("CourseObjID")
-    secID = request.json.get("SecID")
-    semester = request.json.get("Semester")
-    year = request.json.get("Year")
+    sectionID = request.json.get("SectionID")
     evalMethod = request.json.get("EvalMethod")
     studentsPassed = request.json.get("StudentsPassed")
-    result = model.insert_evaluation_result(courseObjID, secID, semester, year, evalMethod, studentsPassed)
-    status_code = get_status_code(result)
-    return jsonify(result), status_code
-
-# LinkCourseToProgram POST route with duplicate prevention and error handling
-@app.route("/link_course_program", methods=["POST"])
-def linkCourseToProgram():
-    model = Model()
-    ProgID = request.json.get("ProgID")
-    courseID = request.json.get("CourseID")
-    result = model.link_course_to_program(ProgID, courseID)
-    status_code = get_status_code(result)
-    return jsonify(result), status_code
-
-# AssignObjectiveToCourseProgram POST route with duplicate prevention and error handling
-@app.route("/assign_objective", methods=["POST"])
-def assignObjectiveToCourseProgram():
-    model = Model()
-    courseID = request.json.get("CourseID")
-    ProgID = request.json.get("ProgID")
-    objID = request.json.get("ObjID")
-    result = model.assign_objective_to_course_program(courseID, ProgID, objID)
+    result = model.insert_evaluation_result(objEvalID, courseObjID, sectionID, evalMethod, studentsPassed)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 

@@ -91,6 +91,7 @@ def create_tables():
                     DeptCode CHAR(4) NOT NULL,
                     FacultyLeadName VARCHAR(255) NOT NULL,
                     FacultyLeadID INT NOT NULL,
+                    FacultyLeadEmail VARCHAR(255) NOT NULL,
                     FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode),
                     FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
                 );
@@ -134,7 +135,7 @@ def create_tables():
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS CourseObjectives (
-                    CourseObjID INT PRIMARY KEY,
+                    CourseObjID INT AUTO_INCREMENT PRIMARY KEY,
                     CourseID VARCHAR(8) NOT NULL,
                     ObjCode VARCHAR(255) NOT NULL,
                     SubObjCode VARCHAR(255),
@@ -145,7 +146,7 @@ def create_tables():
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS ObjectiveEval (
-                    EvalID INT PRIMARY KEY,
+                    ObjEvalID INT AUTO_INCREMENT PRIMARY KEY,
                     CourseObjID INT NOT NULL,
                     SectionID VARCHAR(20) NOT NULL,
                     EvalMethod ENUM('Exam', 'Homework', 'Project') NOT NULL,
