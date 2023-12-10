@@ -380,15 +380,7 @@ export const addEvaluationResult = (evaluationresult) => new Promise((resolve, r
         });
 });
 
-
-// @app.route("/program_courses_objectives", methods=["GET"])
-// def getProgramCoursesObjectives():
-//     model = Model()
-//     program_name = request.args.get("program_name")
-//     results = model.getCoursesAndObjectivesForProgram(program_name)
-//     return jsonify(results)
-
-// getDepartmentFaculty() - takes a department parameter and returns a Promise
+// api: program_course_and_objectives()
 export const getProgramCoursesObjectives = (program_name) => new Promise((resolve, reject) => {
     // create apiConfig object with a property
     const apiConfig = {
@@ -409,15 +401,7 @@ export const getProgramCoursesObjectives = (program_name) => new Promise((resolv
         });
 });
 
-
-// @app.route("/program_objectives", methods=["GET"])
-// def getProgramObjectives():
-//     model = Model()
-//     program_name = request.args.get("program_name")
-//     results = model.getProgramObjectives(program_name)
-//     return jsonify(results)
-
-// getDepartmentFaculty() - takes a department parameter and returns a Promise
+// 
 export const getProgramObjectives = (department) => new Promise((resolve, reject) => {
     // create apiConfig object with a property
     const apiConfig = {
@@ -427,7 +411,7 @@ export const getProgramObjectives = (department) => new Promise((resolve, reject
     };
 
     // use axios to make a get request 
-    axios.get(`${ baseEndpoint }/faculty`, apiConfig)
+    axios.get(`${ baseEndpoint }/program_courses_objectives`, apiConfig)
         // if request is success, resolve Promise iwth data received from request
         .then(x => resolve(x.data))
 

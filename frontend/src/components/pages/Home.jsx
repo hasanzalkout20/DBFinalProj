@@ -73,14 +73,13 @@ export const Home = () => {
         <>
                 
         <div>
-            <h3> Add:</h3>
+            <h3> Add Data:</h3>
         </div>
     
         <form name = "programs" id = "programs">
             <button
                 type = "button"
                 onClick = {() => {
-                    // getPrograms(department);
                     navigate("/add/department");
                 }}
             >
@@ -147,6 +146,16 @@ export const Home = () => {
                 Add Sub-Objective
             </button>
 
+            <button
+                type = "button"
+                onClick = {() => {
+                    navigate("/add/evaluation");
+                }}
+            >
+                Add Evaluation Results
+            </button>
+
+
         </form>
 
         <div>
@@ -157,25 +166,33 @@ export const Home = () => {
             <button
                 type = "button"
                 onClick = {() => {
-                    navigate("/link/objective")
+                    navigate("/link/program")
                 }}
             >
-                Assign a Learning Objective
+                Assign a Course to a Program
             </button>
 
             <button
                 type = "button"
                 onClick = {() => {
-                    navigate("/link/program")
+                    navigate("/link/objective")
                 }}
             >
-                Assign a Course
+                Assign a Learning Objective to a Course
             </button>
 
+            
         </form>
+
+        <div>
+            <h3> Querying:</h3>
+        </div>
         
+        <div>
+            <h8> Input a department name to retrieve all its programs and faculty.</h8>
+        </div>
         <form name = "departments" id = "departments">
-            <TextField label = "Department : " value = {department } setValue={setDepartment}/>
+            <TextField label = "Department Name: " value = {department } setValue={setDepartment}/>
 
             <button
                 type = "button"
@@ -187,7 +204,12 @@ export const Home = () => {
             </button>
         </form>
 
+
         <div>
+        
+        <div>
+            <h4> Department Results:</h4>
+        </div>
             Programs:
             <ul>
                 {
@@ -213,9 +235,11 @@ export const Home = () => {
             </ul>
         </div>
         
-        
+        <div>
+            <h8> Input a program name to retrieve all its courses and objectives.</h8>
+        </div>
         <form name = "departments" id = "departments">
-            <TextField label = "Program : " value = {program } setValue={setProgram}/>
+            <TextField label = "Program Name: " value = {program } setValue={setProgram}/>
 
             <button
                 type = "button"
@@ -227,7 +251,11 @@ export const Home = () => {
             </button>
         </form>
 
+
         <div>
+            <div>
+                <h4> Program Results:</h4>
+            </div>
             Courses:
             <ul>
                 {
@@ -255,6 +283,9 @@ export const Home = () => {
 
         
         <form name = "departments" id = "departments">
+        <div>
+            <h8> Input semester, year, and program name to retrieve all evaluation results for each section.</h8>
+        </div>
             <TextField label = "Semester : " value = {semester } setValue={setSemester}/>
             <TextField label = "Year : " value = {year } setValue={setYear}/>
             <TextField label = "Program : " value = {program } setValue={setProgram}/>
@@ -270,7 +301,10 @@ export const Home = () => {
         </form>
 
         <div>
-            Evaluation Results for each section:
+            <div>
+                <h4> Evaluation Results for each section:</h4>
+            </div>
+            Evaluations:
             <ul>
                 {
                     evaluationResults.map((program, i) => {
@@ -281,14 +315,14 @@ export const Home = () => {
                 }
             </ul>
         </div>
-
-       
-
         
 
         {/* <TextField label = "Academic year : " value = {name } setValue={setName}/> */}
         <form name = "departments" id = "departments">
-            <TextField label = "Academic year : " value = {academicYear } setValue={setAcademicYear}/>
+            <div>
+                <h8> Input an acadmeic year to retrieve all evaluation results for each objctive/sub-objective.</h8>
+            </div>
+            <TextField label = "Academic year (in the form ##-##): " value = {academicYear } setValue={setAcademicYear}/>
 
             <button
                 type = "button"
@@ -301,7 +335,10 @@ export const Home = () => {
         </form>
 
         <div>
-            Evaluation Results for each objective/sub-objective:
+            <div>
+                <h4> Evaluation Results for each objective/sub-objective:</h4>
+            </div>
+            Evaluations:
             <ul>
                 {
                     objectivesList2.map((program, i) => {
@@ -313,9 +350,7 @@ export const Home = () => {
             </ul>
         </div>
 
-    </>
-
-        
+    </> 
         );
 
 };

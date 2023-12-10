@@ -15,6 +15,14 @@ export const AddDept = () => {
         addDepartment(new Department(name, code)).then(x => {
             // getAllDepartments().then(x => setDepartments(x));
             setSuccess("Successfully added");
+            // add button to return to home page
+            <button
+                type = "button"
+                onClick = {() => handleSubmit()} // 
+            >
+                Ruturn to Home Page
+            </button>
+
         }).catch(x => {
             setSuccess("");
         })

@@ -4,5 +4,4 @@ export class Department {
         this.DeptName = DeptName;
         this.DeptCode = DeptCode;
     }
-    
 }

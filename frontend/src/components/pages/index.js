@@ -8,4 +8,5 @@ export * from "./AddObj";
 export * from "./AddSubObj";
 export * from "./linkCo"
 export * from "./linklearn"
+export * from "./AddEvalResult"
 // add page files here

@@ -36,6 +36,7 @@ export const AddFaculty = () => {
             <TextField label = "Email: " value = { email } setValue={setEmail}/>
             <TextField label = "Department Code: " value = { deptCode } setValue={setDeptCode}/>
             <TextField label = "Position: " value = { position } setValue={setPosition}/>
+            
             <button
                 type = "button"
                 onClick = {() => {
