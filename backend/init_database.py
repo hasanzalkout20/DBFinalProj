@@ -11,7 +11,7 @@ database = os.environ.get("DATABASE")
 username = os.environ.get("DB_USERNAME")
 password = os.environ.get("DB_PASSWORD")
 
-# used for testing (clears tables and data)
+# Used for testing (clears tables and data)
 def drop_tables():
     try:
         connection = mysql.connector.connect(
@@ -43,7 +43,6 @@ def drop_tables():
         if connection.is_connected():
             connection.close()
 
-
 # Function to create the database
 def create_database():
     try:
@@ -60,7 +59,7 @@ def create_database():
     finally:
         if connection.is_connected():
             connection.close()
-            
+
 # Function to create the tables
 def create_tables():
     try:
@@ -70,92 +69,91 @@ def create_tables():
         if connection.is_connected():
             cursor = connection.cursor()
             commands = [
-            """
-            CREATE TABLE IF NOT EXISTS Department (
-                DeptName VARCHAR(255) PRIMARY KEY,
-                DeptCode CHAR(4) NOT NULL UNIQUE
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS Faculty (
-                FacultyID INT PRIMARY KEY,
-                Name VARCHAR(255) NOT NULL,
-                Email VARCHAR(255) NOT NULL UNIQUE,
-                DeptCode CHAR(4) NOT NULL,
-                Position ENUM('Full', 'Associate', 'Assistant', 'Adjunct') NOT NULL,
-                FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS Program (
-                ProgramName VARCHAR(255) PRIMARY KEY,
-                DeptCode CHAR(4) NOT NULL,
-                FacultyLead INT NOT NULL,
-                FacultyLeadID INT NOT NULL,
-                FacultyLeadEmail INT NOT NULL,
-                FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode),
-                FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS Course (
-                CourseID VARCHAR(8) PRIMARY KEY,
-                DeptCode CHAR(4) NOT NULL,
-                Title VARCHAR(255) NOT NULL,
-                Description TEXT NOT NULL,
-                FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS Section (
-                SectionID VARCHAR(20) NOT NULL, 
-                CourseID VARCHAR(8) NOT NULL,
-                Semester ENUM('Fall', 'Spring', 'Summer') NOT NULL,
-                Year INT NOT NULL,
-                FacultyLeadID INT NOT NULL,
-                EnrollCount INT NOT NULL,
-                FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-                FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS Objectives (
-                ObjCode VARCHAR(255) PRIMARY KEY,
-                Description TEXT NOT NULL,
-                ProgramName VARCHAR(255) NOT NULL,
-                FOREIGN KEY (ProgramName) REFERENCES Program(ProgramName)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS SubObjectives (
-                SubObjCode VARCHAR(255) PRIMARY KEY,
-                Description TEXT NOT NULL,
-                ObjCode VARCHAR(255) NOT NULL,
-                FOREIGN KEY (ObjCode) REFERENCES Objectives(ObjCode)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS CourseObjectives (
-                CourseObjID INT PRIMARY KEY,
-                CourseID VARCHAR(8) NOT NULL,
-                ObjCode VARCHAR(255) NOT NULL,
-                SubObjCode VARCHAR(255),
-                FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-                FOREIGN KEY (ObjCode) REFERENCES Objectives(ObjCode),
-                FOREIGN KEY (SubObjCode) REFERENCES SubObjectives(SubObjCode)
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS ObjectiveEval (
-                EvalID INT PRIMARY KEY,
-                CourseObjID INT NOT NULL,
-                SectionID VARCHAR(20) NOT NULL,
-                EvalMethod ENUM('Exam', 'Homework', 'Project') NOT NULL, 
-                StudentsPassed INT NOT NULL,
-                FOREIGN KEY (CourseObjID) REFERENCES CourseObjectives(CourseObjID),
-                FOREIGN KEY (SectionID) REFERENCES Section(SectionID)
-            );
-            """
+                """
+                CREATE TABLE IF NOT EXISTS Department (
+                    DeptCode CHAR(4) PRIMARY KEY,
+                    DeptName VARCHAR(255) NOT NULL UNIQUE
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS Faculty (
+                    FacultyID INT PRIMARY KEY,
+                    Name VARCHAR(255) NOT NULL,
+                    Email VARCHAR(255) NOT NULL UNIQUE,
+                    DeptCode CHAR(4) NOT NULL,
+                    Position ENUM('Full', 'Associate', 'Assistant', 'Adjunct') NOT NULL,
+                    FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS Program (
+                    ProgramName VARCHAR(255) PRIMARY KEY,
+                    DeptCode CHAR(4) NOT NULL,
+                    FacultyLeadName VARCHAR(255) NOT NULL,
+                    FacultyLeadID INT NOT NULL,
+                    FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode),
+                    FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS Course (
+                    CourseID VARCHAR(8) PRIMARY KEY,
+                    DeptCode CHAR(4) NOT NULL,
+                    Title VARCHAR(255) NOT NULL,
+                    Description TEXT NOT NULL,
+                    FOREIGN KEY (DeptCode) REFERENCES Department(DeptCode)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS Section (
+                    SectionID VARCHAR(20) PRIMARY KEY,
+                    CourseID VARCHAR(8) NOT NULL,
+                    Semester ENUM('Fall', 'Spring', 'Summer') NOT NULL,
+                    Year INT NOT NULL,
+                    FacultyLeadID INT NOT NULL,
+                    EnrollCount INT NOT NULL,
+                    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
+                    FOREIGN KEY (FacultyLeadID) REFERENCES Faculty(FacultyID)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS Objectives (
+                    ObjCode VARCHAR(255) PRIMARY KEY,
+                    Description TEXT NOT NULL,
+                    ProgramName VARCHAR(255) NOT NULL,
+                    FOREIGN KEY (ProgramName) REFERENCES Program(ProgramName)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS SubObjectives (
+                    SubObjCode VARCHAR(255) PRIMARY KEY,
+                    Description TEXT NOT NULL,
+                    ObjCode VARCHAR(255) NOT NULL,
+                    FOREIGN KEY (ObjCode) REFERENCES Objectives(ObjCode)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS CourseObjectives (
+                    CourseObjID INT PRIMARY KEY,
+                    CourseID VARCHAR(8) NOT NULL,
+                    ObjCode VARCHAR(255) NOT NULL,
+                    SubObjCode VARCHAR(255),
+                    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
+                    FOREIGN KEY (ObjCode) REFERENCES Objectives(ObjCode),
+                    FOREIGN KEY (SubObjCode) REFERENCES SubObjectives(SubObjCode)
+                );
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS ObjectiveEval (
+                    EvalID INT PRIMARY KEY,
+                    CourseObjID INT NOT NULL,
+                    SectionID VARCHAR(20) NOT NULL,
+                    EvalMethod ENUM('Exam', 'Homework', 'Project') NOT NULL,
+                    StudentsPassed INT NOT NULL,
+                    FOREIGN KEY (CourseObjID) REFERENCES CourseObjectives(CourseObjID),
+                    FOREIGN KEY (SectionID) REFERENCES Section(SectionID)
+                );
+                """
             ]
             for command in commands:
                 cursor.execute(command)
@@ -170,6 +168,7 @@ def create_tables():
 
 # Main execution
 if __name__ == "__main__":
-#   drop_tables()
+#    drop_tables()
     create_database()
     create_tables()
+
