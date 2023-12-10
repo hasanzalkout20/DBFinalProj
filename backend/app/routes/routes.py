@@ -14,80 +14,37 @@ def get_status_code(result):
         return 500  # Internal Server Error
     return 201  # Created
 
-@app.route("/program", methods=["GET"])
-def getDepartmentPrograms():
+# GET routes for retrieving data from the database
+@app.route("/department/details", methods=["GET"])
+def department_details():
     model = Model()
-    department_name = request.args.get("department_name")
-    programs = model.getProgramDepartments(department_name)
-    return jsonify(programs)
+    deptCode = request.args.get("deptCode")
+    result = model.get_department_details(deptCode)
+    return jsonify(result)
 
-@app.route("/faculty", methods=["GET"])
-def getDepartmentFaculty():
+@app.route("/program/courses_objectives", methods=["GET"])
+def program_courses_and_objectives():
     model = Model()
-    department_name = request.args.get("department_name")
-    faculty = model.getFacultyByDepartmentName(department_name)
-    return jsonify(faculty)
+    programName = request.args.get("programName")
+    result = model.get_program_courses_and_objectives(programName)
+    return jsonify(result)
 
-# @app.route("/evaluation", methods=["GET"])
-# def getEvaluation():
-#     model = Model()
-#     course_name = request.args.get("course_name")
-#     semester = request.args.get("semester")
-#     year = request.args.get("year")
-#     results = model.getEvaluationResultsByCourseName(course_name, semester, year)
-#     return jsonify(results)
-
-# @app.route("/evaluation_program_semester", methods=["GET"])
-# def getEvaluationByProgramAndSemester():
-#     model = Model()
-#     program_name = request.args.get("program_name")
-#     semester = request.args.get("semester")
-#     year = request.args.get("year")
-#     results = model.getEvaluationResultsByProgramAndSemester(program_name, semester, year)
-#     if not results:
-#         return jsonify({"message": "No data found for the specified parameters"}), 404
-#     return jsonify(results)
-
-@app.route("/evaluation_program_semester", methods=["GET"])
-def getEvaluationByProgramAndSemester():
+@app.route("/program/evaluation_results", methods=["GET"])
+def evaluation_results_by_semester_and_program():
     model = Model()
-    program_name = request.args.get("program_name")
     semester = request.args.get("semester")
     year = request.args.get("year")
-    results = model.getEvaluationResultsByProgramAndSemester(program_name, semester, year)
-    if not results:
-        return jsonify({"message": "No data found for the specified parameters"}), 404
-    return jsonify({"results": results})
+    programName = request.args.get("programName")
+    result = model.get_evaluation_results_by_semester_and_program(semester, year, programName)
+    return jsonify(result)
 
-# @app.route("/evaluation_year", methods=["GET"])
-# def getEvaluationByYear():
-#     model = Model()
-#     academic_year = request.args.get("year")
-#     results = model.getEvaluationResultsByAcademicYear(academic_year)
-#     return jsonify(results)
-
-@app.route("/evaluation_year", methods=["GET"])
-def getEvaluationByYear():
+@app.route("/objectives/evaluation_results", methods=["GET"])
+def evaluation_results_by_academic_year():
     model = Model()
-    academic_year = request.args.get("year")
-    results = model.getEvaluationResultsByAcademicYear(academic_year)
-    if not results:
-        return jsonify({"message": "No data found for the specified parameters"}), 404
-    return jsonify({"results": results})
-
-@app.route("/program_courses_objectives", methods=["GET"])
-def getProgramCoursesObjectives():
-    model = Model()
-    program_name = request.args.get("program_name")
-    results = model.getCoursesAndObjectivesForProgram(program_name)
-    return jsonify(results)
-
-@app.route("/program_objectives", methods=["GET"])
-def getProgramObjectives():
-    model = Model()
-    program_name = request.args.get("program_name")
-    results = model.getProgramObjectives(program_name)
-    return jsonify(results)
+    startYear = request.args.get("startYear")
+    endYear = request.args.get("endYear")
+    result = model.get_evaluation_results_by_academic_year(startYear, endYear)
+    return jsonify(result)
 
 # POST routes for adding data to the database
 

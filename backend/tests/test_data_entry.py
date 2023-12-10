@@ -55,8 +55,26 @@ evaluation_results = [
 # Helper function to send POST requests
 def send_post_request(endpoint, data):
     response = requests.post(f"{base_url}/{endpoint}", json=data)
-    return response.json()
+    try:
+        # Check if the response content type is JSON
+        if response.headers['Content-Type'] == 'application/json':
+            return response.json()
+        else:
+            return {"error": "Non-JSON response received", "status_code": response.status_code, "response": response.text}
+    except JSONDecodeError:
+        return {"error": "JSONDecodeError", "status_code": response.status_code, "response": response.text}
 
+# Helper function to send GET requests
+def send_get_request(endpoint, params=None):
+    response = requests.get(f"{base_url}/{endpoint}", params=params)
+    try:
+        if response.headers['Content-Type'] == 'application/json':
+            return response.json()
+        else:
+            return {"error": "Non-JSON response received", "status_code": response.status_code, "response": response.text}
+    except JSONDecodeError:
+        return {"error": "JSONDecodeError", "status_code": response.status_code, "response": response.text}
+    
 # Test Function
 def test_data_entry():
     # Insert departments
@@ -94,9 +112,36 @@ def test_data_entry():
     # Add evaluation results
     for evaluation_result in evaluation_results:
         print(send_post_request("evaluation", evaluation_result))
-        
+
+# Query Test Functions
+def test_department_details():
+    for dept in departments:
+        deptCode = dept['DeptCode']
+        print(f"Department Details for {deptCode}:")
+        print(send_get_request("department/details", params={"deptCode": deptCode}))
+
+def test_program_courses_and_objectives():
+    for program in programs:
+        programName = program['ProgramName']
+        print(f"Program Courses and Objectives for {programName}:")
+        print(send_get_request("program/courses_objectives", params={"programName": programName}))
+
+def test_evaluation_results_by_semester_and_program():
+    # Example: Testing for the Fall semester of 2023 for the Computer Science program
+    print("Evaluation Results for Fall 2023, Computer Science:")
+    print(send_get_request("program/evaluation_results", params={"semester": "Fall", "year": "2023", "programName": "Computer Science"}))
+
+def test_evaluation_results_by_academic_year():
+    # Example: Testing for the academic year 2023-2024
+    print("Evaluation Results for Academic Year 2023-2024:")
+    print(send_get_request("objectives/evaluation_results", params={"startYear": "2023", "endYear": "2024"}))
+
 if __name__ == "__main__":
     test_data_entry()
+    test_department_details()
+    test_program_courses_and_objectives()
+    test_evaluation_results_by_semester_and_program()
+    test_evaluation_results_by_academic_year()
         
         
 

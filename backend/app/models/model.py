@@ -20,136 +20,107 @@ class Model:
         )
         self.cursor = self.connection.cursor()
 
-    def getProgramDepartments(self, department_name):
-    # Use a subquery to get the department ID from the department name
-        self.cursor.execute('''
-            SELECT ProgName
-            FROM Program
-            JOIN Department ON Program.DeptID = Department.DeptID
-            WHERE Department.DeptName = %s
-        ''', (department_name,))
-        programs = self.cursor.fetchall()
-        return programs
-
-    def getFacultyByDepartmentName(self, department_name):
-        self.cursor.execute('''
-            SELECT Faculty.Name, Faculty.Email, Faculty.Position
-            FROM Faculty
-            INNER JOIN Department ON Faculty.DeptID = Department.DeptID
-            WHERE Department.DeptName = %s
-        ''', (department_name,))
-        return self.cursor.fetchall()
-
-    def getProgramCourses(self, program_name):
-        self.cursor.execute('''
-            SELECT Course.*, CourseObjectives.*, SubObjectives.* 
-            FROM Course
-            JOIN CourseObjectives ON Course.CourseID = CourseObjectives.CourseID
-            JOIN ProgramCourses ON ProgramCourses.CourseID = Course.CourseID
-            JOIN Program ON Program.ProgID = ProgramCourses.ProgID
-            LEFT JOIN SubObjectives ON CourseObjectives.ObjID = SubObjectives.ParentObjID
-            WHERE Program.ProgName = %s
-        ''', (program_name,))
-        return self.cursor.fetchall()
-
-    def getProgramObjectives(self, program_name):       
-        self.cursor.execute('''
-            SELECT Objectives.ObjCode, Objectives.Description
-            FROM Objectives
-            JOIN CourseObjectives ON Objectives.ObjID = CourseObjectives.ObjID
-            JOIN Course ON Course.CourseID = CourseObjectives.CourseID
-            JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
-            JOIN Program ON Program.ProgID = ProgramCourses.ProgID
-            WHERE Program.ProgName = %s
-        ''', (program_name,))
-        return self.cursor.fetchall()
-
-    def getEvaluationResultsByCourseName(self, course_name, semester, year):
-        self.cursor.execute('''
-            SELECT ObjectiveEval.*
-            FROM ObjectiveEval
-            INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
-            INNER JOIN Course ON Section.CourseID = Course.CourseID
-            WHERE Course.Title = %s AND Section.Semester = %s AND Section.Year = %s
-        ''', (course_name, semester, year))
-        return self.cursor.fetchall()
-    
-    # def getEvaluationResultsByProgramAndSemester(self, program_name, semester, year):
-    #     try:
-    #         self.cursor.execute('''
-    #             SELECT Section.SecID, Course.Title, ObjectiveEval.*
-    #             FROM ObjectiveEval
-    #             INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
-    #             INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
-    #             INNER JOIN Course ON Course.CourseID = Section.CourseID
-    #             INNER JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
-    #             INNER JOIN Program ON Program.ProgID = ProgramCourses.ProgID
-    #             WHERE Program.ProgName = %s AND Section.Semester = %s AND Section.Year = %s
-    #         ''', (program_name, semester, year))
-    #         return self.cursor.fetchall()
-    #     except Error as e:
-    #         return {"error": str(e)}
-    def getEvaluationResultsByProgramAndSemester(self, program_name, semester, year):
+    # QUERY METHODS
+    def get_department_details(self, deptCode):
         try:
-            self.cursor.execute('''
-                SELECT Course.Title AS CourseTitle, Section.Semester, Section.Year, Faculty.Name AS FacultyName, 
-                       Objectives.ObjCode, SubObjectives.SubObjCode, ObjectiveEval.EvalMethod, ObjectiveEval.StudentsPassed
-                FROM ObjectiveEval
-                INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
-                INNER JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
-                LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
-                INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
-                INNER JOIN Course ON Section.CourseID = Course.CourseID
-                INNER JOIN Faculty ON Section.FacultyLeadID = Faculty.FacultyID
-                INNER JOIN ProgramCourses ON Course.CourseID = ProgramCourses.CourseID
-                INNER JOIN Program ON Program.ProgID = ProgramCourses.ProgID
-                WHERE Program.ProgName = %s AND Section.Semester = %s AND Section.Year = %s
-            ''', (program_name, semester, year))
-            return self.cursor.fetchall()
+            # Query to get all programs in the department
+            self.cursor.execute("SELECT * FROM Program WHERE DeptCode = %s", (deptCode,))
+            programs = self.cursor.fetchall()
+
+            # Query to get all faculty in the department
+            self.cursor.execute("SELECT * FROM Faculty WHERE DeptCode = %s", (deptCode,))
+            faculty = self.cursor.fetchall()
+
+            return {"programs": programs, "faculty": faculty}
+        except Error as e:
+            return {"error": str(e)}
+        
+    def get_program_courses_and_objectives(self, programName):
+        try:
+            # Query to get all courses for the program
+            self.cursor.execute("SELECT Course.* FROM Course JOIN Program ON Course.DeptCode = Program.DeptCode WHERE ProgramName = %s", (programName,))
+            courses = self.cursor.fetchall()
+
+            # Query to get all objectives for the program
+            self.cursor.execute("SELECT * FROM Objectives WHERE ProgramName = %s", (programName,))
+            objectives = self.cursor.fetchall()
+
+            # Adjusting the way to get sub-objectives
+            subobjectives = {}
+            for obj in objectives:
+                objCode = obj[0]  # Assuming ObjCode is the first column in the Objectives table
+                self.cursor.execute("SELECT * FROM SubObjectives WHERE ObjCode = %s", (objCode,))
+                subobjectives[objCode] = self.cursor.fetchall()
+
+            return {"courses": courses, "objectives": objectives, "subobjectives": subobjectives}
+        except Error as e:
+            return {"error": str(e)}
+
+    def get_evaluation_results_by_semester_and_program(self, semester, year, programName):
+        try:
+            # Query to get all evaluation results
+            self.cursor.execute("""
+                SELECT ObjectiveEval.*, Section.CourseID FROM ObjectiveEval
+                JOIN Section ON ObjectiveEval.SectionID = Section.SectionID
+                JOIN Course ON Section.CourseID = Course.CourseID
+                JOIN Program ON Course.DeptCode = Program.DeptCode
+                WHERE Section.Semester = %s AND Section.Year = %s AND Program.ProgramName = %s
+                """, (semester, year, programName))
+            results = self.cursor.fetchall()
+
+            # Handle case where no data found
+            if not results:
+                return {"message": "No data found"}
+
+            return {"evaluation_results": results}
         except Error as e:
             return {"error": str(e)}
     
-    # def getEvaluationResultsByAcademicYear(self, academic_year):
-    #     self.cursor.execute('''
-    #         SELECT ObjectiveEval.*, Objectives.ObjCode, SubObjectives.SubObjCode
-    #         FROM ObjectiveEval
-    #         JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
-    #         JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
-    #         LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
-    #         JOIN Section ON ObjectiveEval.SecID = Section.SecID
-    #         WHERE Section.Year = %s
-    #     ''', (academic_year,))
-    #     return self.cursor.fetchall()
-    
-    # Modified method to get evaluation results by academic year
-    def getEvaluationResultsByAcademicYear(self, academic_year):
+    def get_evaluation_results_by_academic_year(self, startYear, endYear):
         try:
-            self.cursor.execute('''
-                SELECT Course.Title AS CourseTitle, Section.Semester, Section.Year, Faculty.Name AS FacultyName, 
-                       Objectives.ObjCode, SubObjectives.SubObjCode, ObjectiveEval.EvalMethod, ObjectiveEval.StudentsPassed
+            startYear = int(startYear)
+            endYear = int(endYear)
+
+            self.cursor.execute("""
+                SELECT ObjectiveEval.*, Objectives.Description AS ObjDesc, SubObjectives.Description AS SubObjDesc
                 FROM ObjectiveEval
-                INNER JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
-                INNER JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
-                LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
-                INNER JOIN Section ON ObjectiveEval.SecID = Section.SecID
-                INNER JOIN Course ON Section.CourseID = Course.CourseID
-                INNER JOIN Faculty ON Section.FacultyLeadID = Faculty.FacultyID
-                WHERE Section.Year = %s
-            ''', (academic_year,))
-            return self.cursor.fetchall()
+                JOIN CourseObjectives ON ObjectiveEval.CourseObjID = CourseObjectives.CourseObjID
+                JOIN Objectives ON CourseObjectives.ObjCode = Objectives.ObjCode
+                LEFT JOIN SubObjectives ON CourseObjectives.SubObjCode = SubObjectives.SubObjCode
+                JOIN Section ON ObjectiveEval.SectionID = Section.SectionID
+                WHERE ObjectiveEval.Year >= %s AND ObjectiveEval.Year <= %s
+                """, (startYear, endYear))
+            results = self.cursor.fetchall()
+            
+            # Print column names and their indices
+            column_names = [desc[0] for desc in self.cursor.description]
+            for index, col_name in enumerate(column_names):
+                print(f"Index: {index}, Column: {col_name}")
+
+            if not results:
+                return {"message": "No data found"}
+
+            # Aggregate results
+            aggregated_results = {}
+            for result in results:
+                objCode = result[5]  # Adjust the index as per your SELECT statement
+                subObjCode = result[6] if result[6] else 'N/A'  # Adjust the index as per your SELECT statement
+                enrollCount = int(result[-4]) if result[-4] is not None else 0
+                studentsPassed = int(result[-3]) if result[-3] is not None else 0
+
+                # Convert tuple to string for JSON serialization
+                key = f"{objCode}_{subObjCode}"  # Creating a string key
+                if key not in aggregated_results:
+                    aggregated_results[key] = {'total_students': 0, 'students_passed': 0}
+                aggregated_results[key]['total_students'] += enrollCount
+                aggregated_results[key]['students_passed'] += studentsPassed
+
+            for key, value in aggregated_results.items():
+                value['pass_percentage'] = (value['students_passed'] / value['total_students']) * 100 if value['total_students'] > 0 else 0
+
+            return {"evaluation_results": results, "aggregated_results": aggregated_results}
         except Error as e:
             return {"error": str(e)}
-    
-    def getCoursesAndObjectivesForProgram(self, program_name):
-        self.cursor.execute('''
-            SELECT Course.Title, Objectives.ObjCode, SubObjectives.SubObjCode 
-            FROM Course
-            JOIN CourseObjectives ON Course.CourseID = CourseObjectives.CourseID
-            JOIN Objectives ON CourseObjectives.ObjID = Objectives.ObjID
-            LEFT JOIN SubObjectives ON Objectives.ObjID = SubObjectives.ParentObjID
-            WHERE Course.DeptID IN (SELECT DeptID FROM Program WHERE ProgName = %s)
-        ''', (program_name,))
-        return self.cursor.fetchall()
 
     # DATA ENTRY METHODS
 
