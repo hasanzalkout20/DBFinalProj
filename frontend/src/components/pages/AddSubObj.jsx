@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addSubObjective } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const AddSubObj = () => {
     const [subObjCode, setSubObjCode] = useState("");
@@ -14,6 +15,8 @@ export const AddSubObj = () => {
             .catch(() => setSuccess("Failed to add sub-objective."));
     };
 
+    const navigate = useNavigate();
+
     return (
         <>
             <div>
@@ -26,6 +29,10 @@ export const AddSubObj = () => {
                 <button type="button" onClick={handleSubmit}>Add Sub-Objective</button>
             </form>
             {success}
+
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };

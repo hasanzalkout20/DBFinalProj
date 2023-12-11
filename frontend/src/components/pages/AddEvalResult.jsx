@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addEvaluationResult } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const AddEvalResult = () => {
     const [courseObjID, setCourseObjID] = useState("");
@@ -17,6 +18,8 @@ export const AddEvalResult = () => {
             .catch(() => setSuccess("Failed to add evaluation result."));
     };
 
+    const navigate = useNavigate();
+
     return (
         <>
             <div>
@@ -32,6 +35,10 @@ export const AddEvalResult = () => {
                 <button type="button" onClick={handleSubmit}>Add Evaluation Result</button>
             </form>
             {success}
+
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };

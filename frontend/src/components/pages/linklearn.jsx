@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { linkCourseToProgram } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const LinkLearn = () => {
     const [courseId, setCourseId] = useState("");
@@ -15,6 +16,8 @@ export const LinkLearn = () => {
         });
     };
 
+    const navigate = useNavigate();
+
     return (
         <>
             <div><h3>Link Course to Program:</h3></div>
@@ -24,6 +27,10 @@ export const LinkLearn = () => {
                 <button type="button" onClick={handleSubmit}>Link!</button>
             </form>
             {success}
+
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };

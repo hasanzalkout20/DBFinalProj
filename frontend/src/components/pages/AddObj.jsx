@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addObjective } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const AddObj = () => {
     const [code, setCode] = useState("");
@@ -18,6 +19,8 @@ export const AddObj = () => {
             });
     };
 
+    const navigate = useNavigate();
+
     return (
         <>
             <div>
@@ -32,6 +35,10 @@ export const AddObj = () => {
                 </button>
             </form>
             <div>{success}</div>
+
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };

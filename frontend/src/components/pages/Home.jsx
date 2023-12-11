@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     getDepartmentDetails, getProgramCoursesObjectives,
@@ -9,6 +9,7 @@ import { TextField } from "../common/TextField";
 export const Home = () => {
     const [departmentCode, setDepartmentCode] = useState("");
     const [programName, setProgramName] = useState("");
+    const [programName2, setProgramName2] = useState("");
     const [semester, setSemester] = useState("");
     const [year, setYear] = useState("");
     const [academicYear, setAcademicYear] = useState("");
@@ -32,11 +33,17 @@ export const Home = () => {
     };
 
     const handleSemesterProgramSubmit = () => {
-        getEvaluationResultsBySemesterAndProgram(semester, year, programName).then(setEvaluationResults);
+        getEvaluationResultsBySemesterAndProgram(semester, year, programName2).then(data => {
+            setEvaluationResults(data);
+        });
     }
 
     const handleAcademicYearSubmit = () => {
-        getEvaluationResultsByAcademicYear(academicYear).then(setAcademicYearResults);
+        let input = academicYear.split("-");
+        input = input.map(x => "20" + x);
+        getEvaluationResultsByAcademicYear(input[0], input[1]).then(data => {
+            setAcademicYearResults(data);
+        });
     }
 
     return (
@@ -65,8 +72,30 @@ export const Home = () => {
                 <button onClick={handleDepartmentSubmit}>Submit</button>
                 <div>
                     <h4>Department Results:</h4>
-                    Programs: <ul>{departmentDetails?.programs?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-                    Faculty: <ul>{departmentDetails?.faculty?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                    Programs: 
+                    <ul>
+                        {departmentDetails?.programs?.map((item, i) => <li key={i}>
+                            {item[0]}
+                            <ul>
+                                <li>{item[1]}</li>
+                                <li>{item[2]}</li>
+                                <li>{item[3]}</li>
+                                <li>{item[4]}</li>
+                            </ul>
+                        </li>)}
+                    </ul>
+                    Faculty: 
+                    <ul>
+                        {departmentDetails?.faculty?.map((item, i) => <li key={i}>
+                            Faculty ID: {item[0]}
+                            <ul>
+                                <li>{item[1]}</li>
+                                <li>{item[2]}</li>
+                                <li>{item[3]}</li>
+                                <li>{item[4]}</li>
+                            </ul>
+                        </li>)}
+                    </ul>
                 </div>
             </div>
 
@@ -83,11 +112,11 @@ export const Home = () => {
             <div>
                 <TextField label="Semester: " value={semester} setValue={setSemester} />
                 <TextField label="Year: " value={year} setValue={setYear} />
-                <TextField label="Program: " value={programName} setValue={setProgramName} />
+                <TextField label="Program: " value={programName2} setValue={setProgramName2} />
                 <button onClick={handleSemesterProgramSubmit}>Submit</button>
                 <div>
                     <h4>Evaluation Results for each section:</h4>
-                    Evaluations: <ul>{evaluationResults.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                    Evaluations: <ul>{evaluationResults?.evaluation_results?.map((item, i) => <li key={i}>{item}</li>)}</ul>
                 </div>
             </div>
 
@@ -96,7 +125,22 @@ export const Home = () => {
                 <button onClick={handleAcademicYearSubmit}>Submit</button>
                 <div>
                     <h4>Evaluation Results for each objective/sub-objective:</h4>
-                    Evaluations: <ul>{academicYearResults.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                    Evaluation Results: <ul>{academicYearResults?.evaluation_results?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                    Aggregate Results: 
+                    {
+                        academicYearResults?.aggregated_results && <ul>
+                            {
+                                Object.keys(academicYearResults.aggregated_results).map((x, i) => <li key = {i}>
+                                    {x}
+                                    <ul>
+                                        <li>Total students: { academicYearResults.aggregated_results[x].total_students }</li>
+                                        <li>Total students: { academicYearResults.aggregated_results[x].students_passed }</li>
+                                        <li>Total students: { academicYearResults.aggregated_results[x].pass_percentage.toFixed(2) }</li>
+                                    </ul>
+                                </li>)
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
         </>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addProgram } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const AddProgram = () => {
     const [name, setName] = useState("");
@@ -16,6 +17,8 @@ export const AddProgram = () => {
             .catch(() => setSuccess("Failed to add program."));
     };
 
+    const navigate = useNavigate();
+
     return (
         <>
             <div>
@@ -30,6 +33,10 @@ export const AddProgram = () => {
                 <button type="button" onClick={handleSubmit}>Add Program</button>
             </form>
             {success}
+
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };

@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { addCourse } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const AddCourse = () => {
     const [deptCode, setDeptCode] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [success, setSuccess] = useState("");
+
+    const navigate = useNavigate();
 
     const handleSubmit = () => {
         addCourse({ DeptCode: deptCode, Title: title, Description: description })
@@ -32,6 +35,9 @@ export const AddCourse = () => {
                 </button>
             </form>
             <div>{success}</div>
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };

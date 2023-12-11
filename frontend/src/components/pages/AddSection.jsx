@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addSection } from "../../api";
 import { TextField } from "../common/TextField";
+import { useNavigate } from "react-router-dom";
 
 export const AddSection = () => {
     const [sectionId, setSectionId] = useState("");
@@ -17,6 +18,8 @@ export const AddSection = () => {
             .catch(() => setSuccess("Failed to add section."));
     };
 
+    const navigate = useNavigate();
+
     return (
         <>
             <div>
@@ -32,6 +35,10 @@ export const AddSection = () => {
                 <button type="button" onClick={handleSubmit}>Add Section</button>
             </form>
             {success}
+
+            <button type="button" onClick={() => navigate("/")}>
+                Return Home
+            </button>
         </>
     );
 };
