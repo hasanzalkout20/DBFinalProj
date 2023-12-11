@@ -135,6 +135,7 @@ def link_course_to_objective():
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
+
 @app.route("/evaluation", methods=["POST"])
 def add_evaluation_result():
     model = Model()

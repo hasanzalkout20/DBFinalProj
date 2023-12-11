@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AddCourse, AddDept, AddFaculty, AddObj, AddProgram, AddSection, AddSubObj, Home, LinkLearn, LinkCo, AddEvalResult } from "./pages";
+import { AddCourse, AddDept, AddFaculty, AddObj, AddProgram, AddSection, AddSubObj, Home, LinkCo, AddEvalResult } from "./pages";
 
 function App() {
   return (
@@ -15,7 +15,6 @@ function App() {
           <Route path="/add/section" element={<AddSection />} />
           <Route path="/add/evaluation" element={<AddEvalResult />} />
           <Route path="/add/sub_objective" element={<AddSubObj />} />
-          <Route path="/link/program" element={<LinkLearn />} />
           <Route path="/link/objective" element={<LinkCo />} />
         </Routes>
       </BrowserRouter>

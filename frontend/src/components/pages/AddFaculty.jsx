@@ -4,6 +4,7 @@ import { TextField } from "../common/TextField";
 import { useNavigate } from "react-router-dom";
 
 export const AddFaculty = () => {
+    const [facultyID, setFacultyID] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [deptCode, setDeptCode] = useState("");
@@ -11,7 +12,7 @@ export const AddFaculty = () => {
     const [success, setSuccess] = useState("");
 
     const handleSubmit = () => {
-        addFaculty({ Name: name, Email: email, DeptCode: deptCode, Position: position })
+        addFaculty({ FacultyID: facultyID, Name: name, Email: email, DeptCode: deptCode, Position: position })
             .then(x => {
                 setSuccess("Successfully added faculty.");
             })
@@ -28,6 +29,7 @@ export const AddFaculty = () => {
                 <h3>Input Information to Add Faculty:</h3>
             </div>
             <form id="faculty">
+                <TextField label="Faculty ID: " value={facultyID} setValue={setFacultyID} />
                 <TextField label="Name: " value={name} setValue={setName} />
                 <TextField label="Email: " value={email} setValue={setEmail} />
                 <TextField label="Department Code: " value={deptCode} setValue={setDeptCode} />
