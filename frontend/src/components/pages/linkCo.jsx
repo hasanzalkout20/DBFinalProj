@@ -23,7 +23,7 @@ export const LinkCo = () => {
             <form>
                 <TextField label="Course ID: " value={courseId} setValue={setCourseId}/>
                 <TextField label="Objective Code: " value={objCode} setValue={setObjCode}/>
-                <TextField label="Sub-Objective Code (if exists): " value={subObjCode} setValue={setSubObjCode}/>
+                <TextField label="Sub-Objective Code: " value={subObjCode} setValue={setSubObjCode}/>
                 <button type="button" onClick={handleSubmit}>Link!</button>
             </form>
             {success}

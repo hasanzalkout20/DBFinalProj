@@ -131,9 +131,6 @@ def link_course_to_objective():
     courseID = request.json.get("CourseID")
     objCode = request.json.get("ObjCode")
     subObjCode = request.json.get("SubObjCode")
-
-    print(f"CourseID: {courseID}, ObjCode: {objCode}, SubObjCode: {subObjCode}")  # Debugging
-
     result = model.link_course_to_objective(courseID, objCode, subObjCode)
     status_code = get_status_code(result)
     return jsonify(result), status_code
