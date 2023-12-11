@@ -5,18 +5,16 @@ import { useNavigate } from "react-router-dom";
 
 export const LinkCo = () => {
     const [courseId, setCourseId] = useState("");
-    const [progId, setProgId] = useState("");
-    const [objId, setObjId] = useState("");
+    const [objCode, setObjCode] = useState("");
+    const [subObjCode, setSubObjCode] = useState("");
     const [success, setSuccess] = useState("");
 
-    const handleSubmit = () => {
-        linkCourseObjective({ courseId, progId, objId }).then(() => {
-            setSuccess("Successfully linked course to objective.");
-        }).catch(() => {
-            setSuccess("Failed to link course to objective.");
-        });
-    };
-
+    const handleSubmit = () => { 
+        linkCourseObjective(courseId, objCode, subObjCode)
+            .then(() => setSuccess("Successfully linked course to objective."))
+            .catch(() => setSuccess("Failed to link course to objective."));
+    }    
+    
     const navigate = useNavigate();
 
     return (
@@ -24,8 +22,8 @@ export const LinkCo = () => {
             <div><h3>Link Course to Objective:</h3></div>
             <form>
                 <TextField label="Course ID: " value={courseId} setValue={setCourseId}/>
-                <TextField label="Program ID: " value={progId} setValue={setProgId}/>
-                <TextField label="Objective ID: " value={objId} setValue={setObjId}/>
+                <TextField label="Objective Code: " value={objCode} setValue={setObjCode}/>
+                <TextField label="Sub-Objective Code (if exists): " value={subObjCode} setValue={setSubObjCode}/>
                 <button type="button" onClick={handleSubmit}>Link!</button>
             </form>
             {success}

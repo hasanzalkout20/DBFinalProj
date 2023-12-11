@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     getDepartmentDetails, getProgramCoursesObjectives,
@@ -59,8 +59,7 @@ export const Home = () => {
                 <button onClick={() => navigate("/add/objective")}>Add Objective</button>
                 <button onClick={() => navigate("/add/sub_objective")}>Add Sub-Objective</button>
                 <button onClick={() => navigate("/add/evaluation")}>Add Evaluation Results</button>
-                <button onClick={() => navigate("/link/program")}>Assign a Course to a Program</button>
-                <button onClick={() => navigate("/link/objective")}>Assign a Learning Objective to a Course</button>
+                <button onClick={() => navigate("/link/objective")}>Assign a Learning (sub)Objective to a Course</button>
             </div>
 
             {/* Querying Section */}

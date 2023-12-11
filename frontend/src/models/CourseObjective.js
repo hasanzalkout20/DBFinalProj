@@ -1,7 +1,7 @@
 export class CourseObjective {
-    constructor(CourseObjID, CourseID, ObjID) {
-        this.CourseObjID = CourseObjID;
+    constructor(CourseID, ObjCode, SubObjCode) {
         this.CourseID = CourseID;
-        this.ObjID = ObjID;
+        this.ObjCode = ObjCode;
+        this.SubObjCode = SubObjCode;
     }
 }
