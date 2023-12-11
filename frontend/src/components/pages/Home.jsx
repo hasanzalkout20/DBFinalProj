@@ -134,8 +134,8 @@ export const Home = () => {
                                     {x}
                                     <ul>
                                         <li>Total students: { academicYearResults.aggregated_results[x].total_students }</li>
-                                        <li>Total students: { academicYearResults.aggregated_results[x].students_passed }</li>
-                                        <li>Total students: { academicYearResults.aggregated_results[x].pass_percentage.toFixed(2) }</li>
+                                        <li>Passing students: { academicYearResults.aggregated_results[x].students_passed }</li>
+                                        <li>Pass Percentage: { academicYearResults.aggregated_results[x].pass_percentage.toFixed(2) }</li>
                                     </ul>
                                 </li>)
                             }
