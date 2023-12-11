@@ -149,7 +149,17 @@ export const Home = () => {
                         <button onClick={handleSemesterProgramSubmit}>Submit</button>
                         <div>
                             <h4>Evaluation Results for each section:</h4>
-                            Evaluations: <ul>{evaluationResults?.evaluation_results?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                            <ul>
+                                {evaluationResults?.evaluation_results?.map((result, index) => (
+                                    <li key={index}>
+                                        <div><strong>Course Section:</strong> {result[2]}</div>
+                                        <div><strong>Method of Evaluation:</strong> {result[3]}</div>
+                                        <div><strong>Semester:</strong> {result[4]}</div>
+                                        <div><strong>Year:</strong> {result[5]}</div>
+                                        <div><strong>Students Passed:</strong> {result[6]}</div>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
 
@@ -165,7 +175,18 @@ export const Home = () => {
                                 <strong>Evaluation Results:</strong>
                                 <ul>
                                     {academicYearResults?.evaluation_results?.map((result, index) => (
-                                        <li key={index}>{result}</li>
+                                        <li key={index}>
+                                            <div><strong>Section:</strong> {result[2]}</div>
+                                            <div><strong>Evaluation Method:</strong> {result[3]}</div>
+                                            <div><strong>Semester:</strong> {result[4]}</div>
+                                            <div><strong>Year:</strong> {result[5]}</div>
+                                            <div><strong>Students Passed:</strong> {result[6]}</div>
+                                            <div><strong>Objective:</strong> {result[7]}</div>
+                                            <div><strong>Objective Description:</strong> {result[8]}</div>
+                                            <div><strong>Sub-Objective:</strong> {result[9]}</div>
+                                            <div><strong>Sub-Objective Description:</strong> {result[10]}</div>
+                                            <div><strong>Students Enrolled:</strong> {result[11]}</div>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
