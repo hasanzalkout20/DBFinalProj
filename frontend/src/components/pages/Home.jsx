@@ -157,6 +157,7 @@ export const Home = () => {
                                         <div><strong>Semester:</strong> {result[4]}</div>
                                         <div><strong>Year:</strong> {result[5]}</div>
                                         <div><strong>Students Passed:</strong> {result[6]}</div>
+                                        <div style={{ marginBottom: '10px' }}></div> {/* Space added here */}
                                     </li>
                                 ))}
                             </ul>
@@ -186,6 +187,7 @@ export const Home = () => {
                                             <div><strong>Sub-Objective:</strong> {result[9]}</div>
                                             <div><strong>Sub-Objective Description:</strong> {result[10]}</div>
                                             <div><strong>Students Enrolled:</strong> {result[11]}</div>
+                                            <div style={{ marginBottom: '10px' }}></div> {/* Space added here */}
                                         </li>
                                     ))}
                                 </ul>
@@ -201,6 +203,7 @@ export const Home = () => {
                                                     <li><strong>Total students:</strong> {academicYearResults.aggregated_results[key].total_students}</li>
                                                     <li><strong>Passing students:</strong> {academicYearResults.aggregated_results[key].students_passed}</li>
                                                     <li><strong>Pass Percentage:</strong> {academicYearResults.aggregated_results[key].pass_percentage.toFixed(2)}%</li>
+                                                    <div style={{ marginBottom: '10px' }}></div> {/* Space added here */}
                                                 </ul>
                                             </li>
                                         ))}
