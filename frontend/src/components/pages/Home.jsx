@@ -64,82 +64,130 @@ export const Home = () => {
 
             {/* Querying Section */}
             {/* Querying Section */}
-            <div><h3>Querying:</h3></div>
-
             <div>
-                <TextField label="Department Code: " value={departmentCode} setValue={setDepartmentCode} />
-                <button onClick={handleDepartmentSubmit}>Submit</button>
-                <div>
-                    <h4>Department Results:</h4>
-                    Programs: 
-                    <ul>
-                        {departmentDetails?.programs?.map((item, i) => <li key={i}>
-                            {item[0]}
+                <h3>Querying:</h3>
+
+                {/* Department Query Section */}
+                <div className="query-block">
+                    <div className="query-input">
+                        <TextField label="Department Code: " value={departmentCode} setValue={setDepartmentCode} />
+                        <button onClick={handleDepartmentSubmit}>Submit</button>
+                    </div>
+                    <div className="query-results">
+                        <h4>Department Results:</h4>
+                        <div>
+                            <strong>Programs:</strong>
                             <ul>
-                                <li>{item[1]}</li>
-                                <li>{item[2]}</li>
-                                <li>{item[3]}</li>
-                                <li>{item[4]}</li>
+                                {departmentDetails?.programs?.map((program, index) => (
+                                    <li key={index}>
+                                        Program Name: {program[0]}
+                                        <ul>
+                                            <li>Department Code: {program[1]}</li>
+                                            <li>Person in Charge: {program[2]}</li>
+                                            <li>University ID: {program[3]}</li>
+                                            <li>Email: {program[4]}</li>
+                                        </ul>
+                                    </li>
+                                ))}
                             </ul>
-                        </li>)}
-                    </ul>
-                    Faculty: 
-                    <ul>
-                        {departmentDetails?.faculty?.map((item, i) => <li key={i}>
-                            Faculty ID: {item[0]}
+                            <strong>Faculty:</strong>
                             <ul>
-                                <li>{item[1]}</li>
-                                <li>{item[2]}</li>
-                                <li>{item[3]}</li>
-                                <li>{item[4]}</li>
+                                {departmentDetails?.faculty?.map((faculty, index) => (
+                                    <li key={index}>
+                                        Faculty ID: {faculty[0]}
+                                        <ul>
+                                            <li>Name: {faculty[1]}</li>
+                                            <li>Email: {faculty[2]}</li>
+                                            <li>Department: {faculty[3]}</li>
+                                            <li>Rank: {faculty[4]}</li>
+                                        </ul>
+                                    </li>
+                                ))}
                             </ul>
-                        </li>)}
-                    </ul>
-                </div>
-            </div>
+                        </div>
+                    </div>
 
-            <div>
-                <TextField label="Program Name: " value={programName} setValue={setProgramName} />
-                <button onClick={handleProgramSubmit}>Submit</button>
-                <div>
-                    <h4>Program Results:</h4>
-                    Courses: <ul>{programDetails?.courses?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-                    Objectives: <ul>{programDetails?.objectives?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-                </div>
-            </div>
+                    {/* Program Query Section */}
+                    <div className="query-block">
+                        <div className="query-input">
+                            <TextField label="Program Name: " value={programName} setValue={setProgramName} />
+                            <button onClick={handleProgramSubmit}>Submit</button>
+                        </div>
+                        <div className="query-results">
+                            <h4>Program Results:</h4>
+                            <div>
+                                <strong>Courses:</strong>
+                                <ul>
+                                    {programDetails?.courses?.map((course, index) => (
+                                        <li key={index}>
+                                            <div><strong>Course ID:</strong> {course[0]}</div>
+                                            <div><strong>Title:</strong> {course[1]}</div>
+                                            <div><strong>Description:</strong> {course[2]}</div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Objectives:</strong>
+                                <ul>
+                                    {programDetails?.objectives?.map((objective, index) => (
+                                        <li key={index}>
+                                            <div><strong>Objective Code:</strong> {objective[0]}</div>
+                                            <div><strong>Description:</strong> {objective[1]}</div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
-            <div>
-                <TextField label="Semester: " value={semester} setValue={setSemester} />
-                <TextField label="Year: " value={year} setValue={setYear} />
-                <TextField label="Program: " value={programName2} setValue={setProgramName2} />
-                <button onClick={handleSemesterProgramSubmit}>Submit</button>
-                <div>
-                    <h4>Evaluation Results for each section:</h4>
-                    Evaluations: <ul>{evaluationResults?.evaluation_results?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-                </div>
-            </div>
+                    {/* Semester-Program Query Section */}
+                    <div>
+                        <TextField label="Semester: " value={semester} setValue={setSemester} />
+                        <TextField label="Year: " value={year} setValue={setYear} />
+                        <TextField label="Program: " value={programName2} setValue={setProgramName2} />
+                        <button onClick={handleSemesterProgramSubmit}>Submit</button>
+                        <div>
+                            <h4>Evaluation Results for each section:</h4>
+                            Evaluations: <ul>{evaluationResults?.evaluation_results?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                        </div>
+                    </div>
 
-            <div>
-                <TextField label="Academic year (e.g., 23-24): " value={academicYear} setValue={setAcademicYear} />
-                <button onClick={handleAcademicYearSubmit}>Submit</button>
-                <div>
-                    <h4>Evaluation Results for each objective/sub-objective:</h4>
-                    Evaluation Results: <ul>{academicYearResults?.evaluation_results?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-                    Aggregate Results: 
-                    {
-                        academicYearResults?.aggregated_results && <ul>
-                            {
-                                Object.keys(academicYearResults.aggregated_results).map((x, i) => <li key = {i}>
-                                    {x}
+                    {/* Academic Year Query Section */}
+                    <div className="query-block">
+                        <div className="query-input">
+                            <TextField label="Academic year (e.g., 23-24): " value={academicYear} setValue={setAcademicYear} />
+                            <button onClick={handleAcademicYearSubmit}>Submit</button>
+                        </div>
+                        <div className="query-results">
+                            <h4>Evaluation Results for each objective/sub-objective:</h4>
+                            <div>
+                                <strong>Evaluation Results:</strong>
+                                <ul>
+                                    {academicYearResults?.evaluation_results?.map((result, index) => (
+                                        <li key={index}>{result}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Aggregate Results:</strong>
+                                {academicYearResults?.aggregated_results && (
                                     <ul>
-                                        <li>Total students: { academicYearResults.aggregated_results[x].total_students }</li>
-                                        <li>Passing students: { academicYearResults.aggregated_results[x].students_passed }</li>
-                                        <li>Pass Percentage: { academicYearResults.aggregated_results[x].pass_percentage.toFixed(2) }</li>
+                                        {Object.keys(academicYearResults.aggregated_results).map((key, index) => (
+                                            <li key={index}>
+                                                <strong>Objective:</strong> {key}
+                                                <ul>
+                                                    <li><strong>Total students:</strong> {academicYearResults.aggregated_results[key].total_students}</li>
+                                                    <li><strong>Passing students:</strong> {academicYearResults.aggregated_results[key].students_passed}</li>
+                                                    <li><strong>Pass Percentage:</strong> {academicYearResults.aggregated_results[key].pass_percentage.toFixed(2)}%</li>
+                                                </ul>
+                                            </li>
+                                        ))}
                                     </ul>
-                                </li>)
-                            }
-                        </ul>
-                    }
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
