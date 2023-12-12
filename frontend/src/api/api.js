@@ -41,7 +41,7 @@ export const addCourse = (course) => makePostRequest('/course', course);
 export const addSection = (section) => makePostRequest('/section', section);
 export const addObjective = (objective) => makePostRequest('/objective', objective);
 export const addSubObjective = (subobjective) => makePostRequest('/subobjective', subobjective);
-export const linkCourseObjective = (CourseID, ObjCode, SubObjCode) => makePostRequest('/courseobjective', { CourseID, ObjCode, SubObjCode });
+export const linkCourseObjective = (CourseObjID, CourseID, ObjCode, SubObjCode) => makePostRequest('/courseobjective', { CourseObjID, CourseID, ObjCode, SubObjCode });
 export const addEvaluationResult = (evaluationresult) => makePostRequest('/evaluation', evaluationresult);
 
 

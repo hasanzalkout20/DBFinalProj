@@ -128,10 +128,11 @@ def add_subobjective():
 @app.route("/courseobjective", methods=["POST"])
 def link_course_to_objective():
     model = Model()
+    courseObjID = request.json.get("CourseObjID")
     courseID = request.json.get("CourseID")
     objCode = request.json.get("ObjCode")
     subObjCode = request.json.get("SubObjCode")
-    result = model.link_course_to_objective(courseID, objCode, subObjCode)
+    result = model.link_course_to_objective(courseObjID, courseID, objCode, subObjCode)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 
@@ -139,13 +140,14 @@ def link_course_to_objective():
 @app.route("/evaluation", methods=["POST"])
 def add_evaluation_result():
     model = Model()
+    objEvalID = request.json.get("ObjEvalID")
     courseObjID = request.json.get("CourseObjID")
     sectionID = request.json.get("SectionID")
     evalMethod = request.json.get("EvalMethod")
     semester = request.json.get("Semester")
     year = request.json.get("Year")
     studentsPassed = request.json.get("StudentsPassed")
-    result = model.insert_evaluation_result(courseObjID, sectionID, evalMethod, semester, year, studentsPassed)
+    result = model.insert_evaluation_result(objEvalID, courseObjID, sectionID, evalMethod, semester, year, studentsPassed)
     status_code = get_status_code(result)
     return jsonify(result), status_code
 

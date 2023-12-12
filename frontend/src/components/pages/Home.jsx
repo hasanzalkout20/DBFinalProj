@@ -58,8 +58,8 @@ export const Home = () => {
                 <button onClick={() => navigate("/add/section")}>Add Section</button>
                 <button onClick={() => navigate("/add/objective")}>Add Objective</button>
                 <button onClick={() => navigate("/add/sub_objective")}>Add Sub-Objective</button>
-                <button onClick={() => navigate("/add/evaluation")}>Add Evaluation Results</button>
                 <button onClick={() => navigate("/link/objective")}>Assign a Learning (sub)Objective to a Course</button>
+                <button onClick={() => navigate("/add/evaluation")}>Add Evaluation Results</button>
             </div>
 
             {/* Querying Section */}

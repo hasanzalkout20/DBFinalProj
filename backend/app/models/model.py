@@ -214,30 +214,31 @@ class Model:
             return {"error": str(e)}
 
     # Method to link a course to an objective
-    def link_course_to_objective(self, courseID, objCode, subObjCode=None):
+    def link_course_to_objective(self, courseObjID, courseID, objCode, subObjCode=None):
         try:
-            self.cursor.execute("SELECT CourseObjID FROM CourseObjectives WHERE CourseID = %s AND ObjCode = %s AND (SubObjCode IS NULL OR SubObjCode = %s)", (courseID, objCode, subObjCode))
+            self.cursor.execute("SELECT CourseObjID FROM CourseObjectives WHERE CourseObjID = %s", (courseObjID,))
             if self.cursor.fetchone():
-                return {"message": "Course-objective pair already exists"}
-            sql = "INSERT INTO CourseObjectives (CourseID, ObjCode, SubObjCode) VALUES (%s, %s, %s)"
-            self.cursor.execute(sql, (courseID, objCode, subObjCode))
+                return {"message": "Course-objective link already exists"}
+            sql = "INSERT INTO CourseObjectives (CourseObjID, CourseID, ObjCode, SubObjCode) VALUES (%s, %s, %s, %s)"
+            self.cursor.execute(sql, (courseObjID, courseID, objCode, subObjCode))
             self.connection.commit()
-            return {"message": "Course-objective pair added successfully"}
+            return {"message": "Course-objective link added successfully"}
         except Error as e:
             return {"error": str(e)}
 
     # Method to enter evaluation results for a course objective
-    def insert_evaluation_result(self, courseObjID, sectionID, evalMethod, semester, year, studentsPassed):
+    def insert_evaluation_result(self, objEvalID, courseObjID, sectionID, evalMethod, semester, year, studentsPassed):
         try:
-            self.cursor.execute("SELECT ObjEvalID FROM ObjectiveEval WHERE CourseObjID = %s AND SectionID = %s AND EvalMethod = %s AND Semester = %s AND Year = %s", (courseObjID, sectionID, evalMethod, semester, year))
+            self.cursor.execute("SELECT ObjEvalID FROM ObjectiveEval WHERE ObjEvalID = %s", (objEvalID,))
             if self.cursor.fetchone():
                 return {"message": "Evaluation result already exists"}
-            sql = "INSERT INTO ObjectiveEval (CourseObjID, SectionID, EvalMethod, Semester, Year, StudentsPassed) VALUES (%s, %s, %s, %s, %s, %s)"
-            self.cursor.execute(sql, (courseObjID, sectionID, evalMethod, semester, year, studentsPassed))
+            sql = "INSERT INTO ObjectiveEval (ObjEvalID, CourseObjID, SectionID, EvalMethod, Semester, Year, StudentsPassed) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            self.cursor.execute(sql, (objEvalID, courseObjID, sectionID, evalMethod, semester, year, studentsPassed))
             self.connection.commit()
             return {"message": "Evaluation result added successfully"}
         except Error as e:
             return {"error": str(e)}
+        
 
 
 

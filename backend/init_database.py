@@ -135,7 +135,7 @@ def create_tables():
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS CourseObjectives (
-                    CourseObjID INT AUTO_INCREMENT PRIMARY KEY,
+                    CourseObjID INT PRIMARY KEY,
                     CourseID VARCHAR(8) NOT NULL,
                     ObjCode VARCHAR(255) NOT NULL,
                     SubObjCode VARCHAR(255),
@@ -146,7 +146,7 @@ def create_tables():
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS ObjectiveEval (
-                    ObjEvalID INT AUTO_INCREMENT PRIMARY KEY,
+                    ObjEvalID INT PRIMARY KEY,
                     CourseObjID INT NOT NULL,
                     SectionID VARCHAR(20) NOT NULL,
                     EvalMethod ENUM('Exam', 'Homework', 'Project') NOT NULL,

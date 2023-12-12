@@ -40,17 +40,13 @@ subobjectives = [
 ]
 
 course_objectives = [
-    {"CourseID": "CS101", "ObjCode": "CSOBJ1", "SubObjCode": "CSOBJ1.1"},
-    {"CourseID": "EE101", "ObjCode": "EEOBJ1", "SubObjCode": "EEOBJ1.1"}
+    {"CourseObjID": 1, "CourseID": "CS101", "ObjCode": "CSOBJ1", "SubObjCode": "CSOBJ1.1"},
+    {"CourseObjID": 2, "CourseID": "EE101", "ObjCode": "EEOBJ1", "SubObjCode": "EEOBJ1.1"}
 ]
 
 evaluation_results = [
-    {"CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Exam", "Semester": "Fall", "Year": 2023, "StudentsPassed": 25},
-    {"CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Homework", "Semester": "Fall", "Year": 2023, "StudentsPassed": 30},
-    {"CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Project", "Semester": "Fall", "Year": 2023, "StudentsPassed": 20},
-    {"CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Exam", "Semester": "Spring", "Year": 2023, "StudentsPassed": 20},
-    {"CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Homework", "Semester": "Spring", "Year": 2023, "StudentsPassed": 25},
-    {"CourseObjID": 2, "SectionID": "EE101-001", "EvalMethod": "Project", "Semester": "Spring", "Year": 2023, "StudentsPassed": 15}
+    {"ObjEvalID": 1, "CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Exam", "Semester": "Fall", "Year": 2023, "StudentsPassed": 25},
+    {"ObjEvalID": 2, "CourseObjID": 1, "SectionID": "CS101-001", "EvalMethod": "Homework", "Semester": "Fall", "Year": 2023, "StudentsPassed": 30},
 ]
 
 # Helper function to send POST requests
